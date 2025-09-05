@@ -1,5 +1,6 @@
 
 
+
 import React, { useState, useMemo } from 'react';
 import { PlayerCard, Card, Rarity } from '../types';
 import CardComponent from './CardComponent';
@@ -84,16 +85,16 @@ const CollectionPage: React.FC<CollectionPageProps> = ({ cards, isModal = false 
     );
   }
   
-  const selectClassName = "bg-[color:var(--brand-panel)] border border-[color:var(--brand-teal)]/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[color:var(--brand-orange)] transition w-full sm:w-auto font-semibold";
+  const selectClassName = "bg-[color:var(--brand-panel)] border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[color:var(--brand-orange)] transition w-full sm:w-auto font-semibold";
 
   const filterControls = (
-      <div className="mb-8 p-4 bg-[color:var(--brand-panel)]/50 rounded-xl border border-[color:var(--brand-teal)]/20 flex flex-col sm:flex-row flex-wrap gap-4 items-center justify-center animate-fade-in shadow-lg">
+      <div className="mb-8 p-4 bg-[color:var(--brand-panel)]/50 rounded-xl border border-gray-700 flex flex-col sm:flex-row flex-wrap gap-4 items-center justify-center animate-fade-in shadow-lg">
           <input
               type="text"
               placeholder="Поиск по названию..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-[color:var(--brand-panel)] border border-[color:var(--brand-teal)]/30 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[color:var(--brand-orange)] transition w-full sm:w-auto flex-grow font-semibold"
+              className="bg-[color:var(--brand-panel)] border border-gray-600 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[color:var(--brand-orange)] transition w-full sm:w-auto flex-grow font-semibold"
               aria-label="Поиск по названию"
           />
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
@@ -112,7 +113,7 @@ const CollectionPage: React.FC<CollectionPageProps> = ({ cards, isModal = false 
             </select>
             <button
                 onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                className="p-2 bg-[color:var(--brand-panel)] border border-[color:var(--brand-teal)]/30 rounded-lg text-white hover:bg-[color:var(--brand-teal)] hover:text-[color:var(--brand-bg)] focus:outline-none focus:ring-2 focus:ring-[color:var(--brand-orange)] transition flex-shrink-0"
+                className="p-2 bg-[color:var(--brand-panel)] border border-gray-600 rounded-lg text-white hover:bg-[color:var(--brand-teal)] hover:text-white focus:outline-none focus:ring-2 focus:ring-[color:var(--brand-orange)] transition flex-shrink-0"
                 aria-label={`Порядок сортировки: ${sortOrder === 'asc' ? 'по возрастанию' : 'по убыванию'}`}
             >
                 {sortOrder === 'asc' ? <SortAscendingIcon className="w-5 h-5" /> : <SortDescendingIcon className="w-5 h-5" />}
@@ -120,6 +121,11 @@ const CollectionPage: React.FC<CollectionPageProps> = ({ cards, isModal = false 
           </div>
       </div>
   );
+  
+  const gridLayout = isModal
+    ? "grid grid-cols-2 md:grid-cols-3 gap-4"
+    : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4";
+
 
   return (
     <div className={isModal ? "" : "animate-fade-in"}>
@@ -127,7 +133,7 @@ const CollectionPage: React.FC<CollectionPageProps> = ({ cards, isModal = false 
         <>
             <div className="text-center mb-6">
                 <h2 className="text-5xl font-heading text-[color:var(--brand-orange)] inline-block">Моя Коллекция</h2>
-                <div className="h-1 w-32 bg-[color:var(--brand-teal)] rounded-full mx-auto mt-2 shadow-[0_0_15px_rgba(79,209,197,0.5)]"></div>
+                <div className="h-1 w-32 bg-[color:var(--brand-teal)] rounded-full mx-auto mt-2 shadow-[0_0_15px_rgba(20,184,166,0.5)]"></div>
             </div>
             {filterControls}
         </>
@@ -139,7 +145,7 @@ const CollectionPage: React.FC<CollectionPageProps> = ({ cards, isModal = false 
              <p className="mt-2 text-lg">Попробуйте изменить фильтры или откройте новые сундуки!</p>
          </div>
       ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+          <div className={gridLayout}>
               {(isModal ? groupedCards : filteredAndSortedCards).map(({ card, count }) => (
                 <CardComponent key={card.id} card={card} count={count} />
               ))}

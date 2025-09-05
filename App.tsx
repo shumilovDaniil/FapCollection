@@ -1,4 +1,5 @@
 
+
 import React, { useState, useCallback, useEffect } from 'react';
 import { PlayerCard, Card, Rarity, Chest, Page, PlayerCurrencies } from './types';
 import { RARITY_ORDER, CHESTS } from './constants';
@@ -190,9 +191,9 @@ const App: React.FC = () => {
     
     if (loading) {
         return (
-            <div className="min-h-screen bg-[color:var(--brand-bg)] flex flex-col items-center justify-center text-[color:var(--brand-cream)]">
+            <div className="min-h-screen bg-[color:var(--brand-bg)] flex flex-col items-center justify-center text-gray-300">
                 <img src="./logo.png" alt="XCollection Logo" className="h-32 mb-4 animate-pulse" />
-                <h1 className="text-5xl font-heading text-shadow-lg" style={{color: 'var(--brand-orange)'}}>XCollection</h1>
+                <h1 className="text-5xl font-heading text-shadow-lg text-[color:var(--brand-orange)]">XCollection</h1>
                 <p className="text-lg mt-2 font-semibold">Загрузка данных...</p>
             </div>
         )
@@ -204,7 +205,7 @@ const App: React.FC = () => {
 
     return (
         <ImageContext.Provider value={customImages}>
-            <div className="min-h-screen bg-[color:var(--brand-bg)] text-[color:var(--brand-cream)] font-sans">
+            <div className="min-h-screen bg-[color:var(--brand-bg)] text-gray-200">
                 <Header
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}

@@ -135,7 +135,7 @@ const DeveloperPage: React.FC<DeveloperPageProps> = (props) => {
         }
     };
 
-    const inputClass = "w-full bg-[color:var(--brand-bg)] border border-[color:var(--brand-teal)]/30 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[color:var(--brand-orange)] transition";
+    const inputClass = "w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[color:var(--brand-orange)] transition";
     const labelClass = "block text-sm font-bold text-[color:var(--brand-teal)] mb-1 uppercase tracking-wider";
 
     return (
@@ -159,12 +159,12 @@ const DeveloperPage: React.FC<DeveloperPageProps> = (props) => {
             </div>
 
             {editableCard && (
-                <form onSubmit={handleSubmit} className="bg-[color:var(--brand-panel)] p-6 rounded-xl border border-[color:var(--brand-teal)]/20 space-y-6 max-w-4xl mx-auto shadow-2xl">
+                <form onSubmit={handleSubmit} className="bg-[color:var(--brand-panel)] p-6 rounded-xl border border-gray-700 space-y-6 max-w-4xl mx-auto shadow-2xl">
                     <div className="flex flex-col md:flex-row gap-8">
                         {/* Image Section */}
                         <div className="w-full md:w-1/3 flex-shrink-0">
-                             <img src={customImages.get(editableCard.id) || editableCard.imageUrl} alt="Card Preview" className="aspect-[2/3] w-full object-cover rounded-md bg-gray-700 mb-4 border-2 border-[color:var(--brand-teal)]/30" />
-                             <label htmlFor="upload-image" className="cursor-pointer w-full block text-center bg-teal-500 hover:bg-teal-600 text-[color:var(--brand-bg)] font-bold py-2 px-4 rounded-lg transition-colors">
+                             <img src={customImages.get(editableCard.id) || editableCard.imageUrl} alt="Card Preview" className="aspect-[2/3] w-full object-cover rounded-md bg-gray-700 mb-4 border-2 border-gray-600" />
+                             <label htmlFor="upload-image" className="cursor-pointer w-full block text-center bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">
                                 Загрузить
                             </label>
                             <input
@@ -240,7 +240,7 @@ const DeveloperPage: React.FC<DeveloperPageProps> = (props) => {
                     </div>
                     
                     <div className="flex gap-4">
-                        <button type="submit" className="flex-grow bg-[color:var(--brand-orange)] hover:brightness-110 text-[color:var(--brand-bg)] font-bold py-3 px-6 rounded-lg transition-colors text-xl transform active:scale-95 shadow-lg shadow-[color:var(--brand-orange)]/20">
+                        <button type="submit" className="flex-grow bg-[color:var(--brand-orange)] hover:brightness-110 text-gray-900 font-bold py-3 px-6 rounded-lg transition-colors text-xl transform active:scale-95 shadow-lg shadow-[color:var(--brand-orange)]/20">
                            {selectedCardId === 'new' ? 'Создать Карту' : 'Сохранить Изменения'}
                         </button>
                         {selectedCardId !== 'new' && selectedCardId !== 'none' && (

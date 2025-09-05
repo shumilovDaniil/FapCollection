@@ -32,7 +32,7 @@ const CraftingPage: React.FC<CraftingPageProps> = ({ cards, onCraft }) => {
       ) : (
         <div className="space-y-8 max-w-5xl mx-auto">
           {craftableCards.map(({ card, count }) => (
-            <div key={card.id} className="bg-[color:var(--brand-panel)] p-6 rounded-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-[color:var(--brand-teal)]/20 shadow-lg">
+            <div key={card.id} className="bg-[color:var(--brand-panel)] p-6 rounded-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-gray-700 shadow-lg">
               <div className="flex items-center gap-4">
                 <CardComponent card={card} count={count} className="w-28 flex-shrink-0" />
                 <div>
@@ -47,7 +47,7 @@ const CraftingPage: React.FC<CraftingPageProps> = ({ cards, onCraft }) => {
               </div>
               <button
                 onClick={() => onCraft(card.id)}
-                className="w-full md:w-auto bg-[color:var(--brand-orange)] hover:brightness-110 text-[color:var(--brand-bg)] font-bold py-3 px-8 rounded-lg transition-all duration-200 text-lg transform active:scale-95 shadow-lg shadow-[color:var(--brand-orange)]/20"
+                className="w-full md:w-auto bg-[color:var(--brand-orange)] hover:brightness-110 text-gray-900 font-bold py-3 px-8 rounded-lg transition-all duration-200 text-lg transform active:scale-95 shadow-lg shadow-[color:var(--brand-orange)]/20"
               >
                 Создать
               </button>

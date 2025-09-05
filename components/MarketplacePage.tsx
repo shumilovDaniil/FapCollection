@@ -79,7 +79,7 @@ const MarketplacePage: React.FC<MarketplacePageProps> = ({ playerCards, setPlaye
                             <CardComponent card={listing} />
                             <button 
                                 onClick={() => handleBuy(listing)}
-                                className="w-full mt-2 bg-teal-500 hover:bg-teal-600 text-[color:var(--brand-bg)] font-bold py-2 px-3 rounded-lg transition-colors flex items-center justify-center text-sm transform active:scale-95"
+                                className="w-full mt-2 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-3 rounded-lg transition-colors flex items-center justify-center text-sm transform active:scale-95"
                             >
                                 <span className="mr-2">Купить</span>
                                 <span className="flex items-center font-semibold">
@@ -104,7 +104,7 @@ const MarketplacePage: React.FC<MarketplacePageProps> = ({ playerCards, setPlaye
                                 <CardComponent card={card} count={instances.length} />
                                 <button 
                                     onClick={() => handleSell(instances[0])}
-                                    className="w-full mt-2 bg-[color:var(--brand-orange)] hover:brightness-110 text-[color:var(--brand-bg)] font-bold py-2 px-3 rounded-lg transition-colors transform active:scale-95"
+                                    className="w-full mt-2 bg-[color:var(--brand-orange)] hover:brightness-110 text-gray-900 font-bold py-2 px-3 rounded-lg transition-colors transform active:scale-95"
                                 >
                                     Продать
                                 </button>

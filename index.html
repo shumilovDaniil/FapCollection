@@ -8,23 +8,25 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
       :root {
-        --brand-bg: #0D0B1A;
-        --brand-orange: #FFB700;
-        --brand-teal: #00E0C7;
+        --brand-bg: #111827; /* Darker gray */
+        --brand-panel: #1f2937; /* Lighter gray for panels */
+        --brand-orange: #f97316;
+        --brand-teal: #14b8a6;
+        --brand-cream: #f3f4f6; /* Light gray for text */
       }
       body {
         background-color: var(--brand-bg);
-        color: var(--brand-orange);
-        font-family: 'Exo 2', sans-serif;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
+        color: var(--brand-cream);
+        font-family: 'Inter', sans-serif;
+        font-weight: 400;
+        letter-spacing: normal;
+        text-transform: none;
       }
       .font-heading {
-        font-family: 'Exo 2', sans-serif;
+        font-family: 'Inter', sans-serif;
         font-weight: 900;
         text-shadow: 0px 2px 4px rgba(0,0,0,0.5);
       }
@@ -36,7 +38,7 @@
         background: var(--brand-bg);
       }
       ::-webkit-scrollbar-thumb {
-        background-color: #2a254a;
+        background-color: #374151;
         border-radius: 10px;
         border: 2px solid var(--brand-bg);
       }
@@ -45,8 +47,8 @@
       }
        /* Custom placeholder style */
       ::placeholder {
-        color: var(--brand-orange);
-        opacity: 0.6;
+        color: #9ca3af;
+        opacity: 0.8;
       }
     </style>
   <script type="importmap">
@@ -54,7 +56,8 @@
   "imports": {
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
     "react/": "https://aistudiocdn.com/react@^19.1.1/",
-    "react": "https://aistudiocdn.com/react@^19.1.1"
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react-dom": "https://aistudiocdn.com/react-dom@^19.1.1"
   }
 }
 </script>

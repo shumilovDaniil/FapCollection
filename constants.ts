@@ -5,10 +5,10 @@ export const RARITY_ORDER: Rarity[] = [Rarity.Common, Rarity.Rare, Rarity.Epic, 
 
 // FIX: Added 'gem' property to provide a color for the RarityGem component.
 export const RARITY_STYLES: { [key in Rarity]: { bg: string; border: string; text: string; shadow: string; ring: string; gem: string } } = {
-  [Rarity.Common]: { bg: 'bg-gray-700/80', border: 'border-slate-400', text: 'text-slate-100', shadow: 'shadow-slate-500/10', ring: 'ring-slate-400', gem: 'bg-slate-400' },
-  [Rarity.Rare]: { bg: 'bg-sky-800/80', border: 'border-teal-400', text: 'text-teal-100', shadow: 'shadow-teal-500/20', ring: 'ring-teal-400', gem: 'bg-teal-400' },
-  [Rarity.Epic]: { bg: 'bg-purple-800/80', border: 'border-purple-400', text: 'text-purple-100', shadow: 'shadow-purple-500/30', ring: 'ring-purple-400', gem: 'bg-purple-400' },
-  [Rarity.Legendary]: { bg: 'bg-amber-700/80', border: 'border-orange-400', text: 'text-orange-100', shadow: 'shadow-orange-500/40', ring: 'ring-orange-400', gem: 'bg-orange-400' },
+  [Rarity.Common]: { bg: 'bg-gray-800', border: 'border-gray-500', text: 'text-gray-200', shadow: 'shadow-gray-900/50', ring: 'ring-gray-500', gem: 'bg-gray-400' },
+  [Rarity.Rare]: { bg: 'bg-blue-900', border: 'border-sky-500', text: 'text-sky-200', shadow: 'shadow-sky-700/50', ring: 'ring-sky-500', gem: 'bg-sky-400' },
+  [Rarity.Epic]: { bg: 'bg-purple-900', border: 'border-purple-500', text: 'text-purple-200', shadow: 'shadow-purple-700/50', ring: 'ring-purple-500', gem: 'bg-purple-400' },
+  [Rarity.Legendary]: { bg: 'bg-orange-900', border: 'border-amber-500', text: 'text-amber-200', shadow: 'shadow-amber-700/50', ring: 'ring-amber-500', gem: 'bg-amber-400' },
 };
 
 // These are now only used to seed the database on the first run.

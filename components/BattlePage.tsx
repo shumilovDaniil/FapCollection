@@ -275,9 +275,9 @@ const BattlePage: React.FC<BattlePageProps> = ({ playerCards, allGameCards, play
           {uniquePlayerCards.map(card => {
             const isSelected = selectedDeck.some(c => c.instanceId === card.instanceId);
             return (
-              <div key={card.instanceId} className={`relative rounded-3xl ${isSelected ? 'ring-4 ring-orange-500' : ''}`}>
+              <div key={card.instanceId} className={`relative rounded-3xl transition-all duration-300 ${isSelected ? 'scale-95 opacity-50' : ''}`}>
                 <CardComponent card={card} onClick={() => toggleCardInDeck(card)} />
-                {isSelected && <div className="absolute top-2 right-2 bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg">✓</div>}
+                {isSelected && <div className="absolute inset-0 bg-black/70 rounded-3xl flex items-center justify-center"><div className="text-orange-500 text-6xl font-black">✓</div></div>}
               </div>
             );
           })}
@@ -365,7 +365,7 @@ const BattlePage: React.FC<BattlePageProps> = ({ playerCards, allGameCards, play
                         key={card.instanceId} 
                         card={card}
                         size="small"
-                        className={`w-32 transition-all duration-300 ${turn === 'player' ? 'cursor-pointer hover:-translate-y-4 hover:scale-110 hover:z-10' : 'opacity-70 saturate-50'}`}
+                        className={`w-32 transition-all duration-300 ${turn === 'player' ? 'cursor-pointer hover:-translate-y-4 hover:scale-110' : 'opacity-70 saturate-50'}`}
                         onClick={() => handlePlayerTurn(card)}
                     />
                 ))}
