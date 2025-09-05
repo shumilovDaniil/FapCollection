@@ -1,7 +1,5 @@
-
-
 import React, { useState, useCallback, useEffect } from 'react';
-import { PlayerCard, Card, Rarity, Chest, Page, PlayerCurrencies } from './types';
+import { PlayerCard, Card, Rarity, Chest, Page, PlayerCurrencies, CardRole } from './types';
 import { RARITY_ORDER, CHESTS } from './constants';
 import Header from './components/Header';
 import CollectionPage from './components/CollectionPage';
@@ -62,13 +60,30 @@ const App: React.FC = () => {
         setPlayerCards(prev => [...prev, ...newPlayerCards]);
     };
     
-    const getRandomCardByRarity = (rarity: Rarity): Card => {
-        const cardsOfRarity = allGameCards.filter(c => c.rarity === rarity);
-        if (cardsOfRarity.length === 0) {
-            const commonCards = allGameCards.filter(c => c.rarity === Rarity.Common);
-            return commonCards[Math.floor(Math.random() * commonCards.length)];
+    const getRandomCardByRarity = (rarity: Rarity, filter?: { role: CardRole }): Card => {
+        let potentialCards = allGameCards.filter(c => c.rarity === rarity);
+
+        if (filter?.role) {
+            potentialCards = potentialCards.filter(c => c.role === filter.role);
         }
-        return cardsOfRarity[Math.floor(Math.random() * cardsOfRarity.length)];
+
+        if (potentialCards.length === 0) {
+            // Fallback: try finding a card of the same rarity without the filter
+            let fallbackCards = allGameCards.filter(c => c.rarity === rarity);
+             if (fallbackCards.length === 0) {
+                 // If still nothing, fallback to any common card
+                fallbackCards = allGameCards.filter(c => c.rarity === Rarity.Common);
+             }
+             // If there was a filter, try to apply it to the common cards
+             if(filter?.role) {
+                 const filteredFallback = fallbackCards.filter(c => c.role === filter.role);
+                 if (filteredFallback.length > 0) {
+                    return filteredFallback[Math.floor(Math.random() * filteredFallback.length)];
+                 }
+             }
+            return fallbackCards[Math.floor(Math.random() * fallbackCards.length)];
+        }
+        return potentialCards[Math.floor(Math.random() * potentialCards.length)];
     };
 
     const openChest = useCallback(async (chest: Chest) => {
@@ -100,7 +115,7 @@ const App: React.FC = () => {
                     break;
                 }
             }
-            droppedCards.push(getRandomCardByRarity(chosenRarity));
+            droppedCards.push(getRandomCardByRarity(chosenRarity, chest.filter));
         }
 
         await addCardsToCollection(droppedCards);

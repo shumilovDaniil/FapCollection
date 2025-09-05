@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import { CHESTS } from '../constants';
 import { Chest } from '../types';
@@ -9,10 +7,21 @@ interface OpenChestsPageProps {
   onOpenChest: (chest: Chest) => void;
 }
 
+const getChestEmoji = (id: string) => {
+    switch (id) {
+        case 'common': return '🎁';
+        case 'premium': return '💎';
+        case 'legendary': return '😈';
+        case 'attacker_cache': return '⚔️';
+        case 'support_pack': return '🛡️';
+        default: return '📦';
+    }
+};
+
 const ChestComponent: React.FC<{ chest: Chest; onOpen: () => void }> = ({ chest, onOpen }) => {
     return (
         <div className="bg-[color:var(--brand-panel)] border border-gray-700 rounded-xl p-6 flex flex-col items-center text-center transform hover:scale-105 hover:border-[color:var(--brand-teal)] transition-all duration-300 shadow-lg shadow-black/30">
-            <div className="text-6xl mb-4 transition-transform group-hover:scale-110">{chest.id === 'common' ? '🎁' : chest.id === 'premium' ? '💎' : '😈'}</div>
+            <div className="text-6xl mb-4 transition-transform group-hover:scale-110">{getChestEmoji(chest.id)}</div>
             <h3 className="text-3xl font-heading text-[color:var(--brand-orange)]">{chest.name}</h3>
             <p className="text-gray-300 my-3 flex-grow">{chest.description}</p>
             <button
@@ -31,7 +40,7 @@ const OpenChestsPage: React.FC<OpenChestsPageProps> = ({ onOpenChest }) => {
   return (
     <div className="animate-fade-in">
       <h2 className="text-5xl font-heading mb-8 text-[color:var(--brand-orange)] text-center">Открыть Сундуки</h2>
-      <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 max-w-7xl mx-auto">
         {CHESTS.map((chest) => (
           <ChestComponent key={chest.id} chest={chest} onOpen={() => onOpenChest(chest)} />
         ))}

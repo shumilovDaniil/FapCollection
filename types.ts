@@ -57,4 +57,5 @@ export interface Chest {
     currency: keyof PlayerCurrencies;
     cardCount: [number, number]; // min, max cards
     rarityChances: { [key in Rarity]?: number };
+    filter?: { role: CardRole };
 }
