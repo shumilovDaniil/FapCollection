@@ -149,15 +149,6 @@ const App: React.FC = () => {
         updateAllTags(updatedCards);
     };
 
-    const handleDeleteGameCard = async (cardId: number) => {
-        await db.deleteGameCard(cardId);
-        const updatedCards = await db.getGameCards();
-        setAllGameCards(updatedCards);
-        updateAllTags(updatedCards);
-        // Also remove from player's collection if they own it
-        setPlayerCards(prev => prev.filter(pc => pc.id !== cardId));
-    };
-
     const renderPage = () => {
         switch (currentPage) {
             case Page.Collection:
@@ -171,12 +162,7 @@ const App: React.FC = () => {
             case Page.Marketplace:
                 return <MarketplacePage playerCards={playerCards} setPlayerCards={setPlayerCards} currencies={playerCurrencies} setCurrencies={setPlayerCurrencies} />;
             case Page.Developer:
-                return <DeveloperPage 
-                            allCards={allGameCards} 
-                            onImageUpload={handleImageUpdate} 
-                            onSaveCard={handleGameCardUpdate} 
-                            onDeleteCard={handleDeleteGameCard} // Pass the new delete function
-                        />;
+                return <DeveloperPage allCards={allGameCards} onImageUpload={handleImageUpdate} onSaveCard={handleGameCardUpdate} />;
             default:
                 return <CollectionPage cards={playerCards} />;
         }

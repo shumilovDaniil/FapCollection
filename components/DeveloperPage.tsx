@@ -7,7 +7,6 @@ interface DeveloperPageProps {
     allCards: Card[];
     onImageUpload: (cardId: number, imageData: string) => void;
     onSaveCard: (card: Card) => Promise<void>;
-    onDeleteCard: (cardId: number) => Promise<void>; // New prop for deleting cards
 }
 
 const NEW_CARD_TEMPLATE: Omit<Card, 'id'> = {
@@ -25,8 +24,7 @@ const NEW_CARD_TEMPLATE: Omit<Card, 'id'> = {
     }
 }
 
-const DeveloperPage: React.FC<DeveloperPageProps> = (props) => {
-    const { allCards, onImageUpload, onSaveCard, onDeleteCard } = props; // Destructure onDeleteCard here
+const DeveloperPage: React.FC<DeveloperPageProps> = ({ allCards, onImageUpload, onSaveCard }) => {
     const customImages = useContext(ImageContext);
     const [selectedCardId, setSelectedCardId] = useState<string>('none');
     const [editableCard, setEditableCard] = useState<Card | null>(null);
@@ -109,25 +107,6 @@ const DeveloperPage: React.FC<DeveloperPageProps> = (props) => {
             setSelectedCardId(String(editableCard.id));
         } else {
             alert(`Карта "${editableCard.name}" была сохранена в БД!`);
-        }
-    };
-
-    const handleDeleteCard = async () => {
-        if (!editableCard || selectedCardId === 'new' || selectedCardId === 'none') {
-            alert("Пожалуйста, выберите существующую карту для удаления.");
-            return;
-        }
-
-        if (window.confirm(`Вы уверены, что хотите удалить карту "${editableCard.name}"? Это действие необратимо.`)) {
-            try {
-                await onDeleteCard(editableCard.id);
-                alert(`Карта "${editableCard.name}" успешно удалена.`);
-                setSelectedCardId('none');
-                setEditableCard(null);
-            } catch (error) {
-                console.error("Ошибка при удалении карты:", error);
-                alert("Не удалось удалить карту.");
-            }
         }
     };
 
@@ -228,20 +207,9 @@ const DeveloperPage: React.FC<DeveloperPageProps> = (props) => {
                          </div>
                     </div>
                     
-                    <div className="flex gap-4">
-                        <button type="submit" className="flex-grow bg-[color:var(--brand-orange)] hover:brightness-110 text-[color:var(--brand-bg)] font-bold py-3 px-6 rounded-lg transition-colors text-xl transform active:scale-95 shadow-lg shadow-[color:var(--brand-orange)]/20">
-                           {selectedCardId === 'new' ? 'Создать Карту' : 'Сохранить Изменения'}
-                        </button>
-                        {selectedCardId !== 'new' && selectedCardId !== 'none' && (
-                            <button 
-                                type="button" 
-                                onClick={handleDeleteCard} 
-                                className="flex-grow bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors text-xl transform active:scale-95 shadow-lg shadow-red-600/20"
-                            >
-                                Удалить Карту
-                            </button>
-                        )}
-                    </div>
+                    <button type="submit" className="w-full bg-[color:var(--brand-orange)] hover:brightness-110 text-[color:var(--brand-bg)] font-bold py-3 px-6 rounded-lg transition-colors text-xl transform active:scale-95 shadow-lg shadow-[color:var(--brand-orange)]/20">
+                       {selectedCardId === 'new' ? 'Создать Карту' : 'Сохранить Изменения'}
+                    </button>
                 </form>
             )}
         </div>

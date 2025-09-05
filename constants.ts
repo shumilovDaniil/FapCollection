@@ -2,12 +2,12 @@ import { Card, Rarity, FetishTag, Chest, PlayerCard, PlayerCurrencies } from './
 
 export const RARITY_ORDER: Rarity[] = [Rarity.Common, Rarity.Rare, Rarity.Epic, Rarity.Legendary, Rarity.Masturbatory];
 
-export const RARITY_STYLES: { [key in Rarity]: { bg: string; border: string; text: string; shadow: string; ring: string } } = {
-  [Rarity.Common]: { bg: 'bg-gray-700/80', border: 'border-slate-400', text: 'text-slate-100', shadow: 'shadow-slate-500/10', ring: 'ring-slate-400' },
-  [Rarity.Rare]: { bg: 'bg-sky-800/80', border: 'border-teal-400', text: 'text-teal-100', shadow: 'shadow-teal-500/20', ring: 'ring-teal-400' },
-  [Rarity.Epic]: { bg: 'bg-purple-800/80', border: 'border-purple-400', text: 'text-purple-100', shadow: 'shadow-purple-500/30', ring: 'ring-purple-400' },
-  [Rarity.Legendary]: { bg: 'bg-amber-700/80', border: 'border-orange-400', text: 'text-orange-100', shadow: 'shadow-orange-500/40', ring: 'ring-orange-400' },
-  [Rarity.Masturbatory]: { bg: 'bg-rose-800/80', border: 'border-rose-400', text: 'text-rose-100', shadow: 'shadow-rose-500/50', ring: 'ring-rose-400' },
+export const RARITY_STYLES: { [key in Rarity]: { bg: string; border: string; text: string; shadow: string } } = {
+  [Rarity.Common]: { bg: 'bg-gray-700/80', border: 'border-slate-400', text: 'text-slate-100', shadow: 'shadow-slate-500/10' },
+  [Rarity.Rare]: { bg: 'bg-sky-800/80', border: 'border-teal-400', text: 'text-teal-100', shadow: 'shadow-teal-500/20' },
+  [Rarity.Epic]: { bg: 'bg-purple-800/80', border: 'border-purple-400', text: 'text-purple-100', shadow: 'shadow-purple-500/30' },
+  [Rarity.Legendary]: { bg: 'bg-amber-700/80', border: 'border-orange-400', text: 'text-orange-100', shadow: 'shadow-orange-500/40' },
+  [Rarity.Masturbatory]: { bg: 'bg-rose-800/80', border: 'border-rose-400', text: 'text-rose-100', shadow: 'shadow-rose-500/50' },
 };
 
 // These are now only used to seed the database on the first run.
@@ -90,71 +90,7 @@ export const CHESTS: Chest[] = [
             [Rarity.Epic]: 0.35,
             [Rarity.Legendary]: 0.05,
         },
-    },
-    {
-        id: 'fetish-chest',
-        name: 'Фетиш-сундук',
-        description: 'Содержит карты только одного случайного фетиша (например, только “Фурри” или только “BDSM”).',
-        cost: 120,
-        currency: 'fapCoins',
-        cardCount: [2, 3],
-        rarityChances: {
-            [Rarity.Common]: 0.7,
-            [Rarity.Rare]: 0.25,
-            [Rarity.Epic]: 0.05,
-        },
-    },
-    {
-        id: 'random-orgy',
-        name: 'Рандом-Оргия',
-        description: 'Дропает много дешёвых карт (5–7 штук), но шанс на эпик почти нулевой. Отлично для крафта дублей.',
-        cost: 80,
-        currency: 'fapCoins',
-        cardCount: [5, 7],
-        rarityChances: {
-            [Rarity.Common]: 0.6,
-            [Rarity.Rare]: 0.35,
-            [Rarity.Epic]: 0.05,
-        },
-    },
-    {
-        id: 'mythic-chest',
-        name: 'Мифический сундук',
-        description: 'Содержит 1–2 карты, но гарантированно минимум Эпик. Шанс Легендарки выше обычного в 3 раза.',
-        cost: 300,
-        currency: 'lustGems',
-        cardCount: [1, 2],
-        rarityChances: {
-            [Rarity.Epic]: 0.85,
-            [Rarity.Legendary]: 0.15,
-        },
-    },
-    {
-        id: 'hardcore-box',
-        name: 'Хардкор-бокс',
-        description: 'Шанс дропа “проклятых” карт (с отрицательными статами, но дающими редкие бафы в крафте). Риск/награда.',
-        cost: 150,
-        currency: 'fapCoins',
-        cardCount: [2, 4], // Assuming 2-4 cards for risk/reward
-        rarityChances: {
-            [Rarity.Rare]: 0.4,
-            [Rarity.Epic]: 0.4,
-            [Rarity.Legendary]: 0.2,
-        },
-    },
-    {
-        id: 'secret-chest',
-        name: 'Секретный сундук',
-        description: 'На вид пустой (иконка — просто чёрный ящик). Может выпасть ничего (10% шанс), но может выпасть Легендарка или уникальная карта, которой нет в других сундуках. Чисто на азарт игроков.',
-        cost: 500,
-        currency: 'lustGems',
-        cardCount: [0, 1], // 0 cards for the chance of nothing
-        rarityChances: {
-            [Rarity.Legendary]: 0.7,
-            [Rarity.Epic]: 0.2,
-            [Rarity.Rare]: 0.1,
-        },
-    },
+    }
 ];
 
 export const MARKETPLACE_LISTINGS: (PlayerCard & { price: number })[] = [

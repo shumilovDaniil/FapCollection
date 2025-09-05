@@ -85,16 +85,6 @@ export const saveGameCard = (card: Card): Promise<void> => {
     });
 };
 
-export const deleteGameCard = (cardId: number): Promise<void> => {
-    return new Promise(async (resolve, reject) => {
-        await openDB();
-        const store = getStore(STORE_GAME_CARDS, 'readwrite');
-        const request = store.delete(cardId);
-        request.onsuccess = () => resolve();
-        request.onerror = () => reject(request.error);
-    });
-};
-
 // Player Cards (the player's collection)
 export const getPlayerCards = (): Promise<PlayerCard[]> => getAllFromStore<PlayerCard>(STORE_PLAYER_CARDS);
 export const addPlayerCards = (cards: PlayerCard[]): Promise<void> => {
