@@ -61,6 +61,11 @@ export interface Chest {
     filter?: { role: CardRole };
 }
 
+// Map of instanceId to cooldown end timestamp
+export type CardCooldowns = { [instanceId: string]: number };
+export type KillStats = { [instanceId: string]: number };
+
+
 // --- Fixer Contracts ---
 export interface FixerDistrict {
   id: string;
@@ -69,6 +74,7 @@ export interface FixerDistrict {
   imageUrl: string;
   hpRange: [number, number];
   rewardRange: [number, number];
+  stunChance: number; // Probability (0 to 1) of a card getting stunned
   unlockRequirement?: {
     districtId: string;
     kills: number;
@@ -84,21 +90,20 @@ export interface FixerProgress {
 export interface FixerContractsPageProps {
   progress: FixerProgress;
   allGameCards: Card[];
+  playerCards: PlayerCard[];
   playerCurrencies: PlayerCurrencies;
+  cardCooldowns: CardCooldowns;
   setPlayerCurrencies: React.Dispatch<React.SetStateAction<PlayerCurrencies>>;
   setFixerProgress: React.Dispatch<React.SetStateAction<FixerProgress>>;
-  clickDamage: number;
+  setCardCooldowns: React.Dispatch<React.SetStateAction<CardCooldowns>>;
 }
 
 export interface RaidInterfaceProps {
   district: FixerDistrict;
-  allCards: Card[];
-  onEndRaid: (districtId: string, kills: number, earnings: number) => void;
-  clickDamage: number;
+  team: PlayerCard[];
+  onEndRaid: (districtId: string, kills: number, earnings: number, stunnedCardIds: string[], killStats: KillStats) => void;
 }
 
 export interface CheatMenuProps {
   onAddCurrency: (currency: keyof PlayerCurrencies, amount: number) => void;
-  clickDamage: number;
-  setClickDamage: (damage: number) => void;
 }

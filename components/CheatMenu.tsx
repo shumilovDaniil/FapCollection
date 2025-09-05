@@ -1,19 +1,11 @@
 import React, { useState } from 'react';
 import { PlayerCurrencies, CheatMenuProps } from '../types';
 
-const CheatMenu: React.FC<CheatMenuProps> = ({ onAddCurrency, clickDamage, setClickDamage }) => {
+const CheatMenu: React.FC<CheatMenuProps> = ({ onAddCurrency }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [eddiesInput, setEddiesInput] = useState('10000');
     const [gemsInput, setGemsInput] = useState('1000');
-    const [damageInput, setDamageInput] = useState(String(clickDamage));
-
-    const handleSetDamage = () => {
-        const damage = parseInt(damageInput, 10);
-        if (!isNaN(damage) && damage > 0) {
-            setClickDamage(damage);
-        }
-    };
-
+    
     const handleAddEddies = () => {
         const amount = parseInt(eddiesInput, 10);
         if (!isNaN(amount)) {
@@ -58,15 +50,6 @@ const CheatMenu: React.FC<CheatMenuProps> = ({ onAddCurrency, clickDamage, setCl
                         <div className="flex items-center space-x-2">
                             <input type="number" value={gemsInput} onChange={e => setGemsInput(e.target.value)} className={inputClass} aria-label="Сумма Камней" />
                             <button onClick={handleAddGems} className={buttonClass}>+ Камни</button>
-                        </div>
-                    </div>
-
-                    {/* Clicker Damage */}
-                    <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-300">Урон в Контрактах</label>
-                         <div className="flex items-center space-x-2">
-                            <input type="number" value={damageInput} onChange={e => setDamageInput(e.target.value)} className={inputClass} aria-label="Урон за клик" />
-                            <button onClick={handleSetDamage} className={buttonClass}>Установить</button>
                         </div>
                     </div>
                 </div>

@@ -20,12 +20,13 @@ export const INITIAL_PLAYER_CURRENCIES: PlayerCurrencies = {
   lustGems: 100,
 };
 
+// Updated initial cards for a better start with the new Raid mode (focus on attack)
 export const INITIAL_PLAYER_CARDS: PlayerCard[] = [
-    { ...INITIAL_CARDS.find(c => c.id === 226)!, instanceId: crypto.randomUUID() }, // Нейро-взлом (steal)
-    { ...INITIAL_CARDS.find(c => c.id === 116)!, instanceId: crypto.randomUUID() }, // Вирус 'System Shock' (skip)
-    { ...INITIAL_CARDS.find(c => c.id === 118)!, instanceId: crypto.randomUUID() }, // Black Lace (enhance)
-    { ...INITIAL_CARDS.find(c => c.id === 6)!, instanceId: crypto.randomUUID() },   // Second Heart
-    { ...INITIAL_CARDS.find(c => c.id === 301)!, instanceId: crypto.randomUUID() },
+    { ...INITIAL_CARDS.find(c => c.id === 218)!, instanceId: crypto.randomUUID() }, // Клинки Богомола
+    { ...INITIAL_CARDS.find(c => c.id === 212)!, instanceId: crypto.randomUUID() }, // Ниндзя 'Арасака'
+    { ...INITIAL_CARDS.find(c => c.id === 215)!, instanceId: crypto.randomUUID() }, // Офицер 'Макс-Так'
+    { ...INITIAL_CARDS.find(c => c.id === 301)!, instanceId: crypto.randomUUID() }, // Головорез 'Мальстрём'
+    { ...INITIAL_CARDS.find(c => c.id === 303)!, instanceId: crypto.randomUUID() }, // Охранник 'Арасака'
 ];
 
 export const CHESTS: Chest[] = [

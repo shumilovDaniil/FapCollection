@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { PlayerCard, Card, Rarity, Chest, Page, PlayerCurrencies, CardRole, FixerProgress } from './types';
+import { PlayerCard, Card, Rarity, Chest, Page, PlayerCurrencies, CardRole, FixerProgress, CardCooldowns } from './types';
 import { RARITY_ORDER, CHESTS } from './constants';
 import Header from './components/Header';
 import CollectionPage from './components/CollectionPage';
@@ -22,14 +22,12 @@ const App: React.FC = () => {
     const [playerCurrencies, setPlayerCurrencies] = useState<PlayerCurrencies>({ eddies: 0, lustGems: 0 });
     const [allGameCards, setAllGameCards] = useState<Card[]>([]);
     const [fixerProgress, setFixerProgress] = useState<FixerProgress>({});
+    const [cardCooldowns, setCardCooldowns] = useState<CardCooldowns>({});
     
     const [modalContent, setModalContent] = useState<React.ReactNode | null>(null);
     const [customImages, setCustomImages] = useState<Map<number, string>>(new Map());
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-
-    // Cheat menu state
-    const [clickDamage, setClickDamage] = useState(1);
 
     // Initial data loading from IndexedDB
     useEffect(() => {
@@ -37,18 +35,20 @@ const App: React.FC = () => {
             try {
                 setLoading(true);
                 await db.initDB();
-                const [gameCards, pCards, pCurrencies, images, fxProgress] = await Promise.all([
+                const [gameCards, pCards, pCurrencies, images, fxProgress, cooldowns] = await Promise.all([
                     db.getGameCards(),
                     db.getPlayerCards(),
                     db.getPlayerCurrencies(),
                     db.getAllImages(),
                     db.getFixerProgress(),
+                    db.getCardCooldowns(),
                 ]);
                 setAllGameCards(gameCards);
                 setPlayerCards(pCards);
                 setPlayerCurrencies(pCurrencies);
                 setCustomImages(images);
                 setFixerProgress(fxProgress);
+                setCardCooldowns(cooldowns);
             } catch (err) {
                 console.error("Failed to load game data:", err);
                 setError("Не удалось загрузить игровые данные. Попробуйте обновить страницу.");
@@ -202,10 +202,12 @@ const App: React.FC = () => {
                 return <FixerContractsPage 
                     progress={fixerProgress}
                     allGameCards={allGameCards}
+                    playerCards={playerCards}
                     playerCurrencies={playerCurrencies}
+                    cardCooldowns={cardCooldowns}
                     setPlayerCurrencies={setPlayerCurrencies}
                     setFixerProgress={setFixerProgress}
-                    clickDamage={clickDamage}
+                    setCardCooldowns={setCardCooldowns}
                 />;
             case Page.Chests:
                 return <OpenChestsPage onOpenChest={openChest} />;
@@ -244,11 +246,7 @@ const App: React.FC = () => {
 
     return (
         <ImageContext.Provider value={customImages}>
-            <CheatMenu
-                onAddCurrency={handleAddCurrency}
-                clickDamage={clickDamage}
-                setClickDamage={setClickDamage}
-            />
+            <CheatMenu onAddCurrency={handleAddCurrency} />
             <div className="min-h-screen bg-[color:var(--brand-bg)] text-gray-200">
                 <Header
                     currentPage={currentPage}

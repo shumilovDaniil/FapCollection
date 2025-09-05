@@ -1,14 +1,15 @@
-import { Card, PlayerCard, PlayerCurrencies, FixerProgress } from './types';
+import { Card, PlayerCard, PlayerCurrencies, FixerProgress, CardCooldowns } from './types';
 import { INITIAL_CARDS, INITIAL_PLAYER_CARDS, INITIAL_PLAYER_CURRENCIES } from './constants';
 
 const DB_NAME = 'FapCollectionDB';
-const DB_VERSION = 4; // Incremented version for fixer contracts progress
+const DB_VERSION = 5; // Incremented for card cooldowns
 
 const STORE_GAME_CARDS = 'game_cards';
 const STORE_PLAYER_CARDS = 'player_cards';
 const STORE_PLAYER_CURRENCIES = 'player_currencies';
 const STORE_CARD_IMAGES = 'card_images';
 const STORE_FIXER_PROGRESS = 'fixer_progress';
+const STORE_CARD_COOLDOWNS = 'card_cooldowns';
 
 let db: IDBDatabase;
 
@@ -64,6 +65,13 @@ const openDB = (): Promise<IDBDatabase> => {
                  if (!dbInstance.objectStoreNames.contains(STORE_FIXER_PROGRESS)) {
                     const store = dbInstance.createObjectStore(STORE_FIXER_PROGRESS, { keyPath: 'id' });
                     store.add({ id: 1, progress: {} }); // Initialize with empty progress
+                }
+            }
+            
+            if (oldVersion < 5) {
+                if (!dbInstance.objectStoreNames.contains(STORE_CARD_COOLDOWNS)) {
+                    const store = dbInstance.createObjectStore(STORE_CARD_COOLDOWNS, { keyPath: 'id' });
+                    store.add({ id: 1, cooldowns: {} }); // Initialize with empty cooldowns
                 }
             }
 
@@ -185,6 +193,29 @@ export const updateFixerProgress = (progress: FixerProgress): Promise<void> => {
         await openDB();
         const store = getStore(STORE_FIXER_PROGRESS, 'readwrite');
         const request = store.put({ id: 1, progress });
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+};
+
+// Card Cooldowns
+export const getCardCooldowns = async (): Promise<CardCooldowns> => {
+    return new Promise(async (resolve, reject) => {
+        await openDB();
+        const store = getStore(STORE_CARD_COOLDOWNS, 'readonly');
+        const request = store.get(1);
+        request.onsuccess = () => {
+            resolve(request.result?.cooldowns || {});
+        };
+        request.onerror = () => reject(request.error);
+    });
+};
+
+export const updateCardCooldowns = (cooldowns: CardCooldowns): Promise<void> => {
+    return new Promise(async (resolve, reject) => {
+        await openDB();
+        const store = getStore(STORE_CARD_COOLDOWNS, 'readwrite');
+        const request = store.put({ id: 1, cooldowns });
         request.onsuccess = () => resolve();
         request.onerror = () => reject(request.error);
     });

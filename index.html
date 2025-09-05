@@ -50,6 +50,18 @@
         color: #9ca3af;
         opacity: 0.8;
       }
+      /* VFX Animations */
+      @keyframes damage-number { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-100px) scale(1.5); opacity: 0; } }
+      .animate-damage-number { animation: damage-number 1s forwards; }
+
+      @keyframes hit-shake { 0%, 100% { transform: translate(0, 0) rotate(0); } 20% { transform: translate(-2px, 2px) rotate(-1deg); } 40% { transform: translate(2px, -2px) rotate(1deg); } 60% { transform: translate(-2px, -2px) rotate(1deg); } 80% { transform: translate(2px, 2px) rotate(-1deg); } }
+      .animate-hit-shake { animation: hit-shake 0.2s ease-in-out; }
+
+      @keyframes enemy-death { 0% { opacity: 1; filter: blur(0) grayscale(0); transform: scale(1); } 50% { opacity: 0.8; filter: blur(4px) grayscale(1); transform: scale(1.05); } 100% { opacity: 0; filter: blur(8px) grayscale(1); transform: scale(0.9); } }
+      .animate-enemy-death { animation: enemy-death 0.5s forwards; }
+      
+      @keyframes click-burst { 0% { transform: scale(0); opacity: 0.8; } 100% { transform: scale(1.5); opacity: 0; } }
+      .animate-click-burst { animation: click-burst 0.3s ease-out forwards; }
     </style>
   <script type="importmap">
 {
