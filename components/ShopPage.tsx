@@ -1,6 +1,6 @@
 import React from 'react';
 import { PlayerCurrencies } from '../types';
-import { FapCoinIcon, LustGemIcon } from './IconComponents';
+import { EddyIcon, LustGemIcon } from './IconComponents';
 import { updatePlayerCurrencies } from '../db';
 
 interface ShopPageProps {
@@ -9,8 +9,8 @@ interface ShopPageProps {
 }
 
 const shopItems = [
-    { type: 'fapCoins', amount: 5000, cost: 50, currency: 'lustGems', name: "Мешочек Монет" },
-    { type: 'fapCoins', amount: 25000, cost: 200, currency: 'lustGems', name: "Сундук Монет" },
+    { type: 'eddies', amount: 5000, cost: 50, currency: 'lustGems', name: "Мешочек Эдди" },
+    { type: 'eddies', amount: 25000, cost: 200, currency: 'lustGems', name: "Сундук Эдди" },
     { type: 'lustGems', amount: 100, cost: 0.99, currency: 'real', name: "Горстка Камней" },
     { type: 'lustGems', amount: 550, cost: 4.99, currency: 'real', name: "Кошель Камней" },
     { type: 'lustGems', amount: 1200, cost: 9.99, currency: 'real', name: "Сокровище Камней" },
@@ -49,7 +49,7 @@ const ShopPage: React.FC<ShopPageProps> = ({ currencies, setCurrencies }) => {
             <h3 className="text-3xl font-heading text-[color:var(--brand-orange)] mb-2">{item.name}</h3>
             <div className="my-4 flex-grow flex flex-col items-center justify-center">
                 <div className="flex items-center text-4xl font-black font-heading">
-                   {item.type === 'fapCoins' ? <FapCoinIcon className="w-10 h-10 mr-3 text-[color:var(--brand-orange)]" /> : <LustGemIcon className="w-10 h-10 mr-3 text-purple-400" />}
+                   {item.type === 'eddies' ? <EddyIcon className="w-10 h-10 mr-3 text-[color:var(--brand-orange)]" /> : <LustGemIcon className="w-10 h-10 mr-3 text-purple-400" />}
                    <span>{item.amount.toLocaleString()}</span>
                 </div>
             </div>

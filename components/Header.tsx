@@ -2,16 +2,16 @@
 
 import React from 'react';
 import { Page } from '../types';
-import { FapCoinIcon, LustGemIcon } from './IconComponents';
+import { EddyIcon, LustGemIcon } from './IconComponents';
 
 interface HeaderProps {
   currentPage: Page;
   setCurrentPage: (page: Page) => void;
-  fapCoins: number;
+  eddies: number;
   lustGems: number;
 }
 
-const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage, fapCoins, lustGems }) => {
+const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage, eddies, lustGems }) => {
   const navItems = Object.values(Page);
 
   return (
@@ -41,8 +41,8 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage, fapCoins, 
         </nav>
         <div className="flex items-center space-x-4 mt-2 sm:mt-0">
           <div className="flex items-center bg-gray-800/50 rounded-full px-4 py-2 border border-gray-700 shadow-inner">
-            <FapCoinIcon className="w-6 h-6 mr-2 text-[color:var(--brand-orange)]" />
-            <span className="font-bold text-[color:var(--brand-orange)] text-lg">{fapCoins.toLocaleString()}</span>
+            <EddyIcon className="w-6 h-6 mr-2 text-[color:var(--brand-orange)]" />
+            <span className="font-bold text-[color:var(--brand-orange)] text-lg">{eddies.toLocaleString()}</span>
           </div>
           <div className="flex items-center bg-gray-800/50 rounded-full px-4 py-2 border border-gray-700 shadow-inner">
             <LustGemIcon className="w-6 h-6 mr-2 text-purple-400" />

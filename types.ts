@@ -30,7 +30,7 @@ export interface PlayerCard extends Card {
 }
 
 export interface PlayerCurrencies {
-  fapCoins: number;
+  eddies: number;
   lustGems: number;
 }
 
@@ -42,6 +42,7 @@ export interface PlayerState {
 export enum Page {
   Collection = 'Коллекция',
   Battle = 'Бой',
+  FixerContracts = 'Контракты',
   Chests = 'Сундуки',
   Crafting = 'Крафт',
   Shop = 'Магазин',
@@ -58,4 +59,46 @@ export interface Chest {
     cardCount: [number, number]; // min, max cards
     rarityChances: { [key in Rarity]?: number };
     filter?: { role: CardRole };
+}
+
+// --- Fixer Contracts ---
+export interface FixerDistrict {
+  id: string;
+  name: string;
+  description: string;
+  imageUrl: string;
+  hpRange: [number, number];
+  rewardRange: [number, number];
+  unlockRequirement?: {
+    districtId: string;
+    kills: number;
+  };
+}
+
+export interface FixerProgress {
+  [districtId: string]: {
+    kills: number;
+  };
+}
+
+export interface FixerContractsPageProps {
+  progress: FixerProgress;
+  allGameCards: Card[];
+  playerCurrencies: PlayerCurrencies;
+  setPlayerCurrencies: React.Dispatch<React.SetStateAction<PlayerCurrencies>>;
+  setFixerProgress: React.Dispatch<React.SetStateAction<FixerProgress>>;
+  clickDamage: number;
+}
+
+export interface RaidInterfaceProps {
+  district: FixerDistrict;
+  allCards: Card[];
+  onEndRaid: (districtId: string, kills: number, earnings: number) => void;
+  clickDamage: number;
+}
+
+export interface CheatMenuProps {
+  onAddCurrency: (currency: keyof PlayerCurrencies, amount: number) => void;
+  clickDamage: number;
+  setClickDamage: (damage: number) => void;
 }

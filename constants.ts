@@ -1,7 +1,9 @@
 import { Card, Rarity, Chest, PlayerCard, PlayerCurrencies } from './types';
 import { INITIAL_CARDS } from './data/cards';
+import { FIXER_DISTRICTS } from './data/contracts';
 
 export { INITIAL_CARDS }; // Re-export for other modules like db.ts
+export { FIXER_DISTRICTS }; // Re-export for the new contracts mode
 
 export const RARITY_ORDER: Rarity[] = [Rarity.Common, Rarity.Rare, Rarity.Epic, Rarity.Legendary];
 
@@ -14,8 +16,8 @@ export const RARITY_STYLES: { [key in Rarity]: { bg: string; border: string; tex
 };
 
 export const INITIAL_PLAYER_CURRENCIES: PlayerCurrencies = {
-  fapCoins: 99999,
-  lustGems: 99999,
+  eddies: 1000,
+  lustGems: 100,
 };
 
 export const INITIAL_PLAYER_CARDS: PlayerCard[] = [
@@ -32,7 +34,7 @@ export const CHESTS: Chest[] = [
         name: 'Обычный Сундук',
         description: 'Содержит в основном обычные карты с небольшим шансом на что-то получше.',
         cost: 500,
-        currency: 'fapCoins',
+        currency: 'eddies',
         cardCount: [3, 5],
         rarityChances: {
             [Rarity.Common]: 0.75,

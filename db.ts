@@ -1,13 +1,14 @@
-import { Card, PlayerCard, PlayerCurrencies } from './types';
+import { Card, PlayerCard, PlayerCurrencies, FixerProgress } from './types';
 import { INITIAL_CARDS, INITIAL_PLAYER_CARDS, INITIAL_PLAYER_CURRENCIES } from './constants';
 
 const DB_NAME = 'FapCollectionDB';
-const DB_VERSION = 2; // Incremented version due to schema changes
+const DB_VERSION = 4; // Incremented version for fixer contracts progress
 
 const STORE_GAME_CARDS = 'game_cards';
 const STORE_PLAYER_CARDS = 'player_cards';
 const STORE_PLAYER_CURRENCIES = 'player_currencies';
 const STORE_CARD_IMAGES = 'card_images';
+const STORE_FIXER_PROGRESS = 'fixer_progress';
 
 let db: IDBDatabase;
 
@@ -32,24 +33,41 @@ const openDB = (): Promise<IDBDatabase> => {
         request.onupgradeneeded = (event) => {
             const dbInstance = (event.target as IDBOpenDBRequest).result;
             const tx = (event.target as IDBOpenDBRequest).transaction;
+            const oldVersion = event.oldVersion;
             
-            if (!dbInstance.objectStoreNames.contains(STORE_GAME_CARDS)) {
-                const store = dbInstance.createObjectStore(STORE_GAME_CARDS, { keyPath: 'id' });
-                INITIAL_CARDS.forEach(card => store.add(card));
+            if (oldVersion < 2) {
+                 if (!dbInstance.objectStoreNames.contains(STORE_GAME_CARDS)) {
+                    const store = dbInstance.createObjectStore(STORE_GAME_CARDS, { keyPath: 'id' });
+                    INITIAL_CARDS.forEach(card => store.add(card));
+                }
+                if (!dbInstance.objectStoreNames.contains(STORE_PLAYER_CARDS)) {
+                    const store = dbInstance.createObjectStore(STORE_PLAYER_CARDS, { keyPath: 'instanceId' });
+                    INITIAL_PLAYER_CARDS.forEach(card => store.add(card));
+                }
+                 if (!dbInstance.objectStoreNames.contains(STORE_PLAYER_CURRENCIES)) {
+                    dbInstance.createObjectStore(STORE_PLAYER_CURRENCIES, { keyPath: 'id' });
+                }
+                if (!dbInstance.objectStoreNames.contains(STORE_CARD_IMAGES)) {
+                    dbInstance.createObjectStore(STORE_CARD_IMAGES, { keyPath: 'id' });
+                }
             }
-            if (!dbInstance.objectStoreNames.contains(STORE_PLAYER_CARDS)) {
-                const store = dbInstance.createObjectStore(STORE_PLAYER_CARDS, { keyPath: 'instanceId' });
-                INITIAL_PLAYER_CARDS.forEach(card => store.add(card));
-            }
-             if (!dbInstance.objectStoreNames.contains(STORE_PLAYER_CURRENCIES)) {
+
+            if (oldVersion < 3) {
+                if (dbInstance.objectStoreNames.contains(STORE_PLAYER_CURRENCIES)) {
+                    dbInstance.deleteObjectStore(STORE_PLAYER_CURRENCIES);
+                }
                 const store = dbInstance.createObjectStore(STORE_PLAYER_CURRENCIES, { keyPath: 'id' });
                 store.add({ id: 1, ...INITIAL_PLAYER_CURRENCIES });
             }
-            if (!dbInstance.objectStoreNames.contains(STORE_CARD_IMAGES)) {
-                dbInstance.createObjectStore(STORE_CARD_IMAGES, { keyPath: 'id' });
+
+            if (oldVersion < 4) {
+                 if (!dbInstance.objectStoreNames.contains(STORE_FIXER_PROGRESS)) {
+                    const store = dbInstance.createObjectStore(STORE_FIXER_PROGRESS, { keyPath: 'id' });
+                    store.add({ id: 1, progress: {} }); // Initialize with empty progress
+                }
             }
 
-            tx.oncomplete = () => console.log("DB seeding complete.");
+            tx.oncomplete = () => console.log("DB upgrade or seeding complete.");
         };
     });
 };
@@ -125,7 +143,17 @@ export const getPlayerCurrencies = async (): Promise<PlayerCurrencies> => {
         await openDB();
         const store = getStore(STORE_PLAYER_CURRENCIES, 'readonly');
         const request = store.get(1); // Always get the single currency object
-        request.onsuccess = () => resolve(request.result || INITIAL_PLAYER_CURRENCIES);
+        request.onsuccess = () => {
+            if (request.result) {
+                const result: PlayerCurrencies = {
+                    eddies: request.result.eddies || 0,
+                    lustGems: request.result.lustGems || 0,
+                };
+                resolve(result);
+            } else {
+                resolve(INITIAL_PLAYER_CURRENCIES);
+            }
+        };
         request.onerror = () => reject(request.error);
     });
 };
@@ -134,6 +162,29 @@ export const updatePlayerCurrencies = (currencies: PlayerCurrencies): Promise<vo
         await openDB();
         const store = getStore(STORE_PLAYER_CURRENCIES, 'readwrite');
         const request = store.put({ id: 1, ...currencies });
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+};
+
+// Fixer Progress
+export const getFixerProgress = async (): Promise<FixerProgress> => {
+    return new Promise(async (resolve, reject) => {
+        await openDB();
+        const store = getStore(STORE_FIXER_PROGRESS, 'readonly');
+        const request = store.get(1);
+        request.onsuccess = () => {
+            resolve(request.result?.progress || {});
+        };
+        request.onerror = () => reject(request.error);
+    });
+};
+
+export const updateFixerProgress = (progress: FixerProgress): Promise<void> => {
+    return new Promise(async (resolve, reject) => {
+        await openDB();
+        const store = getStore(STORE_FIXER_PROGRESS, 'readwrite');
+        const request = store.put({ id: 1, progress });
         request.onsuccess = () => resolve();
         request.onerror = () => reject(request.error);
     });

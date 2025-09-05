@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { PlayerCard, Card, Rarity, Chest, Page, PlayerCurrencies, CardRole } from './types';
+import { PlayerCard, Card, Rarity, Chest, Page, PlayerCurrencies, CardRole, FixerProgress } from './types';
 import { RARITY_ORDER, CHESTS } from './constants';
 import Header from './components/Header';
 import CollectionPage from './components/CollectionPage';
@@ -9,21 +9,27 @@ import ShopPage from './components/ShopPage';
 import MarketplacePage from './components/MarketplacePage';
 import DeveloperPage from './components/DeveloperPage';
 import BattlePage from './components/BattlePage';
+import FixerContractsPage from './components/FixerContractsPage';
 import Modal from './components/Modal';
 import * as db from './db';
 import { ImageContext } from './context/ImageContext';
+import CheatMenu from './components/CheatMenu';
 
 
 const App: React.FC = () => {
     const [currentPage, setCurrentPage] = useState<Page>(Page.Collection);
     const [playerCards, setPlayerCards] = useState<PlayerCard[]>([]);
-    const [playerCurrencies, setPlayerCurrencies] = useState<PlayerCurrencies>({ fapCoins: 0, lustGems: 0 });
+    const [playerCurrencies, setPlayerCurrencies] = useState<PlayerCurrencies>({ eddies: 0, lustGems: 0 });
     const [allGameCards, setAllGameCards] = useState<Card[]>([]);
+    const [fixerProgress, setFixerProgress] = useState<FixerProgress>({});
     
     const [modalContent, setModalContent] = useState<React.ReactNode | null>(null);
     const [customImages, setCustomImages] = useState<Map<number, string>>(new Map());
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
+    // Cheat menu state
+    const [clickDamage, setClickDamage] = useState(1);
 
     // Initial data loading from IndexedDB
     useEffect(() => {
@@ -31,16 +37,18 @@ const App: React.FC = () => {
             try {
                 setLoading(true);
                 await db.initDB();
-                const [gameCards, pCards, pCurrencies, images] = await Promise.all([
+                const [gameCards, pCards, pCurrencies, images, fxProgress] = await Promise.all([
                     db.getGameCards(),
                     db.getPlayerCards(),
                     db.getPlayerCurrencies(),
                     db.getAllImages(),
+                    db.getFixerProgress(),
                 ]);
                 setAllGameCards(gameCards);
                 setPlayerCards(pCards);
                 setPlayerCurrencies(pCurrencies);
                 setCustomImages(images);
+                setFixerProgress(fxProgress);
             } catch (err) {
                 console.error("Failed to load game data:", err);
                 setError("Не удалось загрузить игровые данные. Попробуйте обновить страницу.");
@@ -50,6 +58,12 @@ const App: React.FC = () => {
         };
         loadGameData();
     }, []);
+
+    const handleAddCurrency = useCallback(async (currency: keyof PlayerCurrencies, amount: number) => {
+        const newCurrencies = { ...playerCurrencies, [currency]: playerCurrencies[currency] + amount };
+        await db.updatePlayerCurrencies(newCurrencies);
+        setPlayerCurrencies(newCurrencies);
+    }, [playerCurrencies]);
 
     const addCardsToCollection = async (newCards: Card[]) => {
         const newPlayerCards: PlayerCard[] = newCards.map(card => ({
@@ -184,6 +198,15 @@ const App: React.FC = () => {
                     playerCurrencies={playerCurrencies}
                     setPlayerCurrencies={setPlayerCurrencies}
                 />;
+            case Page.FixerContracts:
+                return <FixerContractsPage 
+                    progress={fixerProgress}
+                    allGameCards={allGameCards}
+                    playerCurrencies={playerCurrencies}
+                    setPlayerCurrencies={setPlayerCurrencies}
+                    setFixerProgress={setFixerProgress}
+                    clickDamage={clickDamage}
+                />;
             case Page.Chests:
                 return <OpenChestsPage onOpenChest={openChest} />;
             case Page.Crafting:
@@ -191,6 +214,7 @@ const App: React.FC = () => {
             case Page.Shop:
                 return <ShopPage currencies={playerCurrencies} setCurrencies={setPlayerCurrencies} />;
             case Page.Marketplace:
+                // FIX: Pass setPlayerCurrencies to the setCurrencies prop.
                 return <MarketplacePage playerCards={playerCards} setPlayerCards={setPlayerCards} currencies={playerCurrencies} setCurrencies={setPlayerCurrencies} />;
             case Page.Developer:
                 return <DeveloperPage 
@@ -220,11 +244,16 @@ const App: React.FC = () => {
 
     return (
         <ImageContext.Provider value={customImages}>
+            <CheatMenu
+                onAddCurrency={handleAddCurrency}
+                clickDamage={clickDamage}
+                setClickDamage={setClickDamage}
+            />
             <div className="min-h-screen bg-[color:var(--brand-bg)] text-gray-200">
                 <Header
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
-                    fapCoins={playerCurrencies.fapCoins}
+                    eddies={playerCurrencies.eddies}
                     lustGems={playerCurrencies.lustGems}
                 />
                 <main className="p-4 md:p-8">

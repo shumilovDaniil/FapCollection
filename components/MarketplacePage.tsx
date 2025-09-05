@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { PlayerCard, PlayerCurrencies } from '../types';
 import { MARKETPLACE_LISTINGS } from '../constants';
 import CardComponent from './CardComponent';
-import { FapCoinIcon } from './IconComponents';
+import { EddyIcon } from './IconComponents';
 import * as db from '../db';
 
 interface MarketplacePageProps {
@@ -16,13 +16,13 @@ const MarketplacePage: React.FC<MarketplacePageProps> = ({ playerCards, setPlaye
     const [listings, setListings] = useState(MARKETPLACE_LISTINGS);
 
     const handleBuy = async (listing: typeof listings[0]) => {
-        if (currencies.fapCoins < listing.price) {
-            alert("Недостаточно FapCoins!");
+        if (currencies.eddies < listing.price) {
+            alert("Недостаточно Эдди!");
             return;
         }
 
         // Update currencies
-        const newCurrencies = { ...currencies, fapCoins: currencies.fapCoins - listing.price };
+        const newCurrencies = { ...currencies, eddies: currencies.eddies - listing.price };
         await db.updatePlayerCurrencies(newCurrencies);
         setCurrencies(newCurrencies);
 
@@ -36,7 +36,7 @@ const MarketplacePage: React.FC<MarketplacePageProps> = ({ playerCards, setPlaye
     };
 
     const handleSell = async (card: PlayerCard) => {
-        const price = prompt(`За сколько FapCoins вы хотите продать "${card.name}"?`);
+        const price = prompt(`За сколько Эдди вы хотите продать "${card.name}"?`);
         const sellPrice = parseInt(price || '0', 10);
 
         if (isNaN(sellPrice) || sellPrice <= 0) {
@@ -48,7 +48,7 @@ const MarketplacePage: React.FC<MarketplacePageProps> = ({ playerCards, setPlaye
         const profit = sellPrice - commission;
 
         // Update currencies
-        const newCurrencies = { ...currencies, fapCoins: currencies.fapCoins + profit };
+        const newCurrencies = { ...currencies, eddies: currencies.eddies + profit };
         await db.updatePlayerCurrencies(newCurrencies);
         setCurrencies(newCurrencies);
 
@@ -56,7 +56,7 @@ const MarketplacePage: React.FC<MarketplacePageProps> = ({ playerCards, setPlaye
         await db.removePlayerCards([card.instanceId]);
         setPlayerCards(prev => prev.filter(c => c.instanceId !== card.instanceId));
 
-        alert(`Карта "${card.name}" продана за ${sellPrice} FapCoins. После комиссии 10% (${commission}) вы получили ${profit} FapCoins.`);
+        alert(`Карта "${card.name}" продана за ${sellPrice} Эдди. После комиссии 10% (${commission}) вы получили ${profit} Эдди.`);
     };
 
     const groupedPlayerCards = playerCards.reduce((acc, card) => {
@@ -84,7 +84,7 @@ const MarketplacePage: React.FC<MarketplacePageProps> = ({ playerCards, setPlaye
                                 <span className="mr-2">Купить</span>
                                 <span className="flex items-center font-semibold">
                                     {listing.price.toLocaleString()}
-                                    <FapCoinIcon className="w-4 h-4 ml-1" />
+                                    <EddyIcon className="w-4 h-4 ml-1" />
                                 </span>
                             </button>
                         </div>

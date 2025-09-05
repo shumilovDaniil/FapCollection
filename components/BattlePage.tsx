@@ -2,7 +2,7 @@ import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { PlayerCard, Card, PlayerCurrencies } from '../types';
 import { updatePlayerCurrencies } from '../db';
 import CardComponent from './CardComponent';
-import { FapCoinIcon } from './IconComponents';
+import { EddyIcon } from './IconComponents';
 
 const DECK_SIZE = 5;
 const PLAYER_MAX_HP = 500;
@@ -199,7 +199,7 @@ const BattlePage: React.FC<BattlePageProps> = ({ playerCards, allGameCards, play
     if (nextOpponentHp <= 0) {
         const calculatedReward = Math.floor(Math.random() * 150) + 50;
         setReward(calculatedReward);
-        const newCurrencies = { ...playerCurrencies, fapCoins: playerCurrencies.fapCoins + calculatedReward };
+        const newCurrencies = { ...playerCurrencies, eddies: playerCurrencies.eddies + calculatedReward };
         updatePlayerCurrencies(newCurrencies).then(() => setPlayerCurrencies(newCurrencies));
         setStatus('victory');
         return;
@@ -256,7 +256,7 @@ const BattlePage: React.FC<BattlePageProps> = ({ playerCards, allGameCards, play
     return (
       <div className="text-center animate-fade-in">
         <h2 className="text-5xl font-heading text-[color:var(--brand-orange)]">Боевая Арена</h2>
-        <p className="text-xl text-gray-300 my-6">Соберите колоду из 5 карт и сразитесь за славу и FapCoins!</p>
+        <p className="text-xl text-gray-300 my-6">Соберите колоду из 5 карт и сразитесь за славу и Эдди!</p>
         <button
           onClick={() => setStatus('deck_selection')}
           className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-10 rounded-full text-2xl transition-transform transform hover:scale-105"
@@ -321,8 +321,8 @@ const BattlePage: React.FC<BattlePageProps> = ({ playerCards, allGameCards, play
             </h2>
             {status === 'victory' && (
                 <div className="flex items-center text-2xl text-yellow-400 mb-6 bg-black/30 p-4 rounded-xl">
-                    <FapCoinIcon className="w-8 h-8 mr-2"/>
-                    <span>Вы получили {reward} FapCoins!</span>
+                    <EddyIcon className="w-8 h-8 mr-2"/>
+                    <span>Вы получили {reward} Эдди!</span>
                 </div>
             )}
             {status === 'draw' && (

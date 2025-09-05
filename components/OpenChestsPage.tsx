@@ -1,7 +1,8 @@
 import React from 'react';
 import { CHESTS } from '../constants';
 import { Chest } from '../types';
-import { FapCoinIcon, LustGemIcon } from './IconComponents';
+// FIX: Replaced FapCoinIcon with EddyIcon as FapCoinIcon is not an exported member of IconComponents.
+import { EddyIcon, LustGemIcon } from './IconComponents';
 
 interface OpenChestsPageProps {
   onOpenChest: (chest: Chest) => void;
@@ -29,7 +30,8 @@ const ChestComponent: React.FC<{ chest: Chest; onOpen: () => void }> = ({ chest,
                 className="mt-4 w-full bg-[color:var(--brand-orange)] hover:brightness-110 text-gray-900 font-bold py-3 px-4 rounded-full transition-all duration-200 flex items-center justify-center space-x-2 text-lg transform active:scale-95 shadow-lg shadow-[color:var(--brand-orange)]/20"
             >
                 <span>Открыть за {chest.cost}</span>
-                {chest.currency === 'fapCoins' ? <FapCoinIcon className="w-6 h-6"/> : <LustGemIcon className="w-6 h-6"/>}
+                {/* FIX: Changed comparison from 'fapCoins' to 'eddies' to match the PlayerCurrencies type and replaced FapCoinIcon with EddyIcon. */}
+                {chest.currency === 'eddies' ? <EddyIcon className="w-6 h-6"/> : <LustGemIcon className="w-6 h-6"/>}
             </button>
         </div>
     );
