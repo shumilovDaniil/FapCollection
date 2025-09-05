@@ -1,6 +1,7 @@
+
 import React, { useState, useCallback, useEffect } from 'react';
 import { PlayerCard, Card, Rarity, Chest, Page, PlayerCurrencies } from './types';
-import { RARITY_ORDER, updateAllTags, CHESTS } from './constants';
+import { RARITY_ORDER, CHESTS } from './constants';
 import Header from './components/Header';
 import CollectionPage from './components/CollectionPage';
 import OpenChestsPage from './components/OpenChestsPage';
@@ -8,6 +9,7 @@ import CraftingPage from './components/CraftingPage';
 import ShopPage from './components/ShopPage';
 import MarketplacePage from './components/MarketplacePage';
 import DeveloperPage from './components/DeveloperPage';
+import BattlePage from './components/BattlePage';
 import Modal from './components/Modal';
 import * as db from './db';
 import { ImageContext } from './context/ImageContext';
@@ -37,7 +39,6 @@ const App: React.FC = () => {
                     db.getAllImages(),
                 ]);
                 setAllGameCards(gameCards);
-                updateAllTags(gameCards); // Update tags based on DB
                 setPlayerCards(pCards);
                 setPlayerCurrencies(pCurrencies);
                 setCustomImages(images);
@@ -146,14 +147,12 @@ const App: React.FC = () => {
         await db.saveGameCard(card);
         const updatedCards = await db.getGameCards();
         setAllGameCards(updatedCards);
-        updateAllTags(updatedCards);
     };
 
     const handleDeleteGameCard = async (cardId: number) => {
         await db.deleteGameCard(cardId);
         const updatedCards = await db.getGameCards();
         setAllGameCards(updatedCards);
-        updateAllTags(updatedCards);
         // Also remove from player's collection if they own it
         setPlayerCards(prev => prev.filter(pc => pc.id !== cardId));
     };
@@ -162,6 +161,13 @@ const App: React.FC = () => {
         switch (currentPage) {
             case Page.Collection:
                 return <CollectionPage cards={playerCards} />;
+            case Page.Battle:
+                return <BattlePage 
+                    playerCards={playerCards}
+                    allGameCards={allGameCards}
+                    playerCurrencies={playerCurrencies}
+                    setPlayerCurrencies={setPlayerCurrencies}
+                />;
             case Page.Chests:
                 return <OpenChestsPage onOpenChest={openChest} />;
             case Page.Crafting:
@@ -185,8 +191,8 @@ const App: React.FC = () => {
     if (loading) {
         return (
             <div className="min-h-screen bg-[color:var(--brand-bg)] flex flex-col items-center justify-center text-[color:var(--brand-cream)]">
-                <img src="./logo.png" alt="Fap Collection Logo" className="h-32 mb-4 animate-pulse" />
-                <h1 className="text-5xl font-heading text-shadow-lg" style={{color: 'var(--brand-orange)'}}>Fap Collection</h1>
+                <img src="./logo.png" alt="XCollection Logo" className="h-32 mb-4 animate-pulse" />
+                <h1 className="text-5xl font-heading text-shadow-lg" style={{color: 'var(--brand-orange)'}}>XCollection</h1>
                 <p className="text-lg mt-2 font-semibold">Загрузка данных...</p>
             </div>
         )

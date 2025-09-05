@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 export const FapCoinIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
@@ -20,27 +19,15 @@ export const StrengthIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => 
     </svg>
 );
 
-export const AgilityIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+export const HealingIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
-        <path fillRule="evenodd" d="M11.47 2.47a.75.75 0 011.06 0l7.5 7.5a.75.75 0 11-1.06 1.06l-6.22-6.22V21a.75.75 0 01-1.5 0V4.81l-6.22 6.22a.75.75 0 11-1.06-1.06l7.5-7.5z" clipRule="evenodd" />
+        <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clipRule="evenodd" />
     </svg>
 );
 
-export const CharismaIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+export const SpecialEffectIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
-        <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
-    </svg>
-);
-
-export const StaminaIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
-        <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.11-4.789 9.27a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.004.001a.752.752 0 01-.704 0l-.004-.001z" />
-    </svg>
-);
-
-export const RageIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
-        <path fillRule="evenodd" d="M12.963 2.286a.75.75 0 00-1.071 1.052A24.75 24.75 0 0112 6C11.534 6 11.077 5.968 10.635 5.908a.75.75 0 00-.712.836A22.502 22.502 0 0012 21c.337 0 .67-.014 1-.042a.75.75 0 00.686-.818A22.504 22.504 0 0012.963 2.286z" clipRule="evenodd" />
+        <path fillRule="evenodd" d="M11.64 22.52a.75.75 0 01-1.28 0L.17 3.34a.75.75 0 011.1-1.04l21.25 10a.75.75 0 010 1.34l-9.8 4.62-4.62 9.8zM4.15 4.09L10.5 20.25l3.8-8.06L20.9 8.5 4.15 4.09z" clipRule="evenodd" />
     </svg>
 );
 

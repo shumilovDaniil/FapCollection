@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect, useMemo } from 'react';
-import { ALL_TAGS } from '../constants';
 import { ImageContext } from '../context/ImageContext';
-import { Card, Rarity, FetishTag, CardStats } from '../types';
+import { Card, Rarity, CardStats, CardRole, SpecialEffect } from '../types';
 
 interface DeveloperPageProps {
     allCards: Card[];
@@ -15,13 +14,10 @@ const NEW_CARD_TEMPLATE: Omit<Card, 'id'> = {
     rarity: Rarity.Common,
     imageUrl: 'https://placehold.co/400x600/1a202c/ec4899/png?text=New+Card',
     effect: '',
-    tags: [],
+    role: 'attack',
     stats: {
         strength: 10,
-        agility: 10,
-        charisma: 10,
-        stamina: 10,
-        rage: 10,
+        healing: 0,
     }
 }
 
@@ -77,24 +73,32 @@ const DeveloperPage: React.FC<DeveloperPageProps> = (props) => {
         reader.readAsDataURL(file);
     };
 
-    const handleInputChange = (field: keyof Card, value: any) => {
-        setEditableCard(prev => prev ? { ...prev, [field]: value } : null);
+    const handleInputChange = (field: keyof Card | 'specialEffect', value: any) => {
+        if (field === 'specialEffect') {
+            setEditableCard(prev => {
+                if (!prev) return null;
+                const newCard = {...prev};
+                if (value === 'none') {
+                    delete newCard.specialEffect;
+                    delete newCard.effectValue;
+                } else {
+                    newCard.specialEffect = value;
+                    if (value !== 'enhance_next_attack') {
+                        delete newCard.effectValue;
+                    }
+                }
+                return newCard;
+            });
+        } else {
+            setEditableCard(prev => prev ? { ...prev, [field]: value } : null);
+        }
     };
+    
 
     const handleStatChange = (stat: keyof CardStats, value: string) => {
         const numValue = parseInt(value, 10);
         if (isNaN(numValue) && value !== "") return;
         setEditableCard(prev => prev ? { ...prev, stats: { ...prev.stats, [stat]: isNaN(numValue) ? 0 : numValue } } : null);
-    };
-
-    const handleTagChange = (tag: FetishTag) => {
-        setEditableCard(prev => {
-            if (!prev) return null;
-            const newTags = prev.tags.includes(tag)
-                ? prev.tags.filter(t => t !== tag)
-                : [...prev.tags, tag];
-            return { ...prev, tags: newTags };
-        });
     };
     
     const handleSubmit = async (e: React.FormEvent) => {
@@ -178,44 +182,51 @@ const DeveloperPage: React.FC<DeveloperPageProps> = (props) => {
                                 <label htmlFor="card-name" className={labelClass}>Название</label>
                                 <input type="text" id="card-name" value={editableCard.name} onChange={e => handleInputChange('name', e.target.value)} className={inputClass} required />
                             </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label htmlFor="card-rarity" className={labelClass}>Редкость</label>
+                                    <select id="card-rarity" value={editableCard.rarity} onChange={e => handleInputChange('rarity', e.target.value as Rarity)} className={inputClass}>
+                                        {Object.values(Rarity).map(r => <option key={r} value={r}>{r}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label htmlFor="card-role" className={labelClass}>Роль</label>
+                                    <select id="card-role" value={editableCard.role} onChange={e => handleInputChange('role', e.target.value as CardRole)} className={inputClass}>
+                                        <option value="attack">Атака</option>
+                                        <option value="support">Поддержка</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div>
-                                <label htmlFor="card-rarity" className={labelClass}>Редкость</label>
-                                <select id="card-rarity" value={editableCard.rarity} onChange={e => handleInputChange('rarity', e.target.value as Rarity)} className={inputClass}>
-                                    {Object.values(Rarity).map(r => <option key={r} value={r}>{r}</option>)}
+                                <label htmlFor="card-special-effect" className={labelClass}>Спецэффект</label>
+                                <select id="card-special-effect" value={editableCard.specialEffect || 'none'} onChange={e => handleInputChange('specialEffect', e.target.value as SpecialEffect | 'none')} className={inputClass}>
+                                    <option value="none">Нет</option>
+                                    <option value="skip_turn">Пропуск хода</option>
+                                    <option value="steal_card">Кража карты</option>
+                                    <option value="enhance_next_attack">Усиление атаки</option>
+                                    <option value="second_heart">Второе сердце</option>
                                 </select>
                             </div>
+                             {editableCard.specialEffect === 'enhance_next_attack' && (
+                                <div>
+                                    <label htmlFor="card-effect-value" className={labelClass}>Значение усиления</label>
+                                    <input type="number" id="card-effect-value" value={editableCard.effectValue || ''} onChange={e => handleInputChange('effectValue', parseInt(e.target.value, 10) || 0)} className={inputClass} />
+                                </div>
+                            )}
                              <div>
                                 <label htmlFor="card-effect" className={labelClass}>Эффект</label>
-                                <textarea id="card-effect" value={editableCard.effect} onChange={e => handleInputChange('effect', e.target.value)} className={inputClass} rows={3}></textarea>
+                                <textarea id="card-effect" value={editableCard.effect} onChange={e => handleInputChange('effect', e.target.value)} className={inputClass} rows={2}></textarea>
                             </div>
-                        </div>
-                    </div>
-
-                    {/* Tags Section */}
-                    <div>
-                        <label className={labelClass}>Теги</label>
-                        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 p-4 bg-[color:var(--brand-bg)] rounded-lg">
-                            {ALL_TAGS.map(tag => (
-                                <label key={tag} className="flex items-center space-x-2 cursor-pointer">
-                                    <input 
-                                        type="checkbox" 
-                                        checked={editableCard.tags.includes(tag)}
-                                        onChange={() => handleTagChange(tag)}
-                                        className="form-checkbox h-5 w-5 rounded bg-gray-700 border-gray-600 text-[color:var(--brand-orange)] focus:ring-[color:var(--brand-orange)]/50"
-                                    />
-                                    <span className="text-gray-200">{tag}</span>
-                                </label>
-                            ))}
                         </div>
                     </div>
 
                     {/* Stats Section */}
                     <div>
                         <label className={labelClass}>Параметры</label>
-                         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                            {(Object.keys(editableCard.stats) as Array<keyof CardStats>).map(statKey => (
+                         <div className="grid grid-cols-2 gap-4">
+                            {(['strength', 'healing'] as Array<keyof CardStats>).map(statKey => (
                                 <div key={statKey}>
-                                    <label htmlFor={`stat-${statKey}`} className="capitalize block text-sm font-medium text-gray-400 mb-1">{statKey}</label>
+                                    <label htmlFor={`stat-${statKey}`} className="capitalize block text-sm font-medium text-gray-400 mb-1">{statKey === 'strength' ? 'Сила' : 'Исцеление'}</label>
                                     <input 
                                         type="number" 
                                         id={`stat-${statKey}`}

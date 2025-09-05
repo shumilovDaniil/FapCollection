@@ -10,7 +10,7 @@ interface CraftingPageProps {
 
 const CraftingPage: React.FC<CraftingPageProps> = ({ cards, onCraft }) => {
   const groupedCards = cards.reduce((acc, card) => {
-    if (card.rarity === Rarity.Masturbatory) return acc; // Cannot craft from max rarity
+    if (card.rarity === Rarity.Legendary) return acc; // Cannot craft from max rarity
     if (!acc[card.id]) {
       acc[card.id] = { card: card, count: 0 };
     }

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Card, Rarity } from '../types'; // Import Rarity enum
 import { RARITY_STYLES } from '../constants';
-import { StrengthIcon, AgilityIcon, CharismaIcon, StaminaIcon, RageIcon } from './IconComponents';
+import { StrengthIcon, HealingIcon, SpecialEffectIcon } from './IconComponents';
 import { ImageContext } from '../context/ImageContext';
 
 interface CardComponentProps {
@@ -9,6 +9,7 @@ interface CardComponentProps {
   count?: number;
   onClick?: () => void;
   className?: string;
+  size?: 'normal' | 'small';
 }
 
 // New Rarity Gem component
@@ -16,11 +17,12 @@ const RarityGem: React.FC<{ color: string }> = ({ color }) => (
   <div className={`w-3 h-3 rounded-full ${color} shadow-lg ring-2 ring-white/50 animate-pulse`}></div>
 );
 
-const CardComponent: React.FC<CardComponentProps> = ({ card, count, onClick, className }) => {
+const CardComponent: React.FC<CardComponentProps> = ({ card, count, onClick, className, size = 'normal' }) => {
   // Use RARITY_STYLES directly from constants.ts
   const styles = RARITY_STYLES[card.rarity];
   const customImages = useContext(ImageContext);
   const displayImageUrl = customImages.get(card.id) || card.imageUrl;
+  const isSmall = size === 'small';
 
   return (
     <div
@@ -34,47 +36,40 @@ const CardComponent: React.FC<CardComponentProps> = ({ card, count, onClick, cla
         </div>
       </div>
       
-      {/* Уменьшенная прозрачность для лучшей видимости картинки */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent flex flex-col justify-end p-4">
-        <h3 className={`font-heading text-2xl font-bold leading-tight drop-shadow-lg ${styles.text}`}>{card.name}</h3>
-        <p className={`text-xs font-semibold ${styles.text} opacity-80 uppercase`}>
+      {/* Затемнение под текстом для лучшей читаемости */}
+      <div className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent flex flex-col justify-end rounded-b-[1.2rem] ${isSmall ? 'p-2 pt-10' : 'p-4 pt-20'}`}>
+        <h3 className={`font-heading font-bold leading-tight drop-shadow-lg ${styles.text} ${isSmall ? 'text-base' : 'text-2xl'}`}>{card.name}</h3>
+        <p className={`font-semibold ${styles.text} opacity-80 uppercase ${isSmall ? 'text-[9px]' : 'text-xs'}`}>
           Тип: {card.rarity}
         </p>
         
-        <div className="border-t border-white/20 my-2"></div>
+        <div className={`border-t border-white/20 ${isSmall ? 'my-1' : 'my-2'}`}></div>
 
         {/* Default stats view with icons */}
-        <div className="grid grid-cols-3 gap-x-2 gap-y-1 text-sm text-white/90 font-mono group-hover:hidden">
-            <div className="flex items-center" title="Сила"><StrengthIcon className="w-4 h-4 mr-1 text-red-400 flex-shrink-0"/> {card.stats.strength}</div>
-            <div className="flex items-center" title="Ловкость"><AgilityIcon className="w-4 h-4 mr-1 text-green-400 flex-shrink-0"/> {card.stats.agility}</div>
-            <div className="flex items-center" title="Харизма"><CharismaIcon className="w-4 h-4 mr-1 text-yellow-400 flex-shrink-0"/> {card.stats.charisma}</div>
-            <div className="flex items-center" title="Выносливость"><StaminaIcon className="w-4 h-4 mr-1 text-blue-400 flex-shrink-0"/> {card.stats.stamina}</div>
-            <div className="flex items-center" title="Ярость"><RageIcon className="w-4 h-4 mr-1 text-orange-400 flex-shrink-0"/> {card.stats.rage}</div>
+        <div className={`flex text-white/90 font-mono group-hover:hidden ${isSmall ? 'text-xs space-x-2' : 'text-sm space-x-4'}`}>
+            {card.stats.strength > 0 && <div className="flex items-center" title="Сила"><StrengthIcon className={`text-red-400 flex-shrink-0 ${isSmall ? 'w-3 h-3 mr-0.5' : 'w-4 h-4 mr-1'}`}/> {card.stats.strength}</div>}
+            {card.stats.healing > 0 && <div className="flex items-center" title="Исцеление"><HealingIcon className={`text-emerald-400 flex-shrink-0 ${isSmall ? 'w-3 h-3 mr-0.5' : 'w-4 h-4 mr-1'}`}/> {card.stats.healing}</div>}
         </div>
         
         {/* Detailed stats view on hover */}
-        <div className="hidden w-full text-sm space-y-0.5 font-mono text-gray-300 group-hover:block">
-            <div className="flex justify-between items-center"><span className="opacity-75 text-xs">Сила</span> <span className="font-bold text-red-400">{card.stats.strength}</span></div>
-            <div className="flex justify-between items-center"><span className="opacity-75 text-xs">Ловкость</span> <span className="font-bold text-green-400">{card.stats.agility}</span></div>
-            <div className="flex justify-between items-center"><span className="opacity-75 text-xs">Харизма</span> <span className="font-bold text-yellow-400">{card.stats.charisma}</span></div>
-            <div className="flex justify-between items-center"><span className="opacity-75 text-xs">Выносливость</span> <span className="font-bold text-blue-400">{card.stats.stamina}</span></div>
-            <div className="flex justify-between items-center"><span className="opacity-75 text-xs">Ярость</span> <span className="font-bold text-orange-400">{card.stats.rage}</span></div>
+        <div className={`hidden w-full space-y-0.5 font-mono text-gray-300 group-hover:block ${isSmall ? 'text-xs' : 'text-sm'}`}>
+            {card.stats.strength > 0 && <div className="flex justify-between items-center"><span className={`opacity-75 ${isSmall ? 'text-[10px]' : 'text-xs'}`}>Сила</span> <span className="font-bold text-red-400">{card.stats.strength}</span></div>}
+            {card.stats.healing > 0 && <div className="flex justify-between items-center"><span className={`opacity-75 ${isSmall ? 'text-[10px]' : 'text-xs'}`}>Исцеление</span> <span className="font-bold text-emerald-400">{card.stats.healing}</span></div>}
         </div>
 
-        <div className="absolute top-4 left-4 flex flex-wrap gap-2">
-          {card.tags.map(tag => (
-            <span key={tag} className="bg-black/50 backdrop-blur-sm text-white text-[10px] px-2 py-1 rounded-full border border-white/20">
-              {tag}
-            </span>
-          ))}
-        </div>
-
+      </div>
         {/* Индикатор редкости (камень) */}
-        <div className="absolute top-4 right-4">
+        <div className={`absolute flex items-center space-x-2 ${isSmall ? 'top-2 right-2' : 'top-4 right-4'}`}>
+           {/* FIX: The `title` prop is not valid on these SVG components. Wrapped them in a span with a title attribute to provide a tooltip. */}
+           { card.specialEffect && 
+            <span title="Специальный Эффект"><SpecialEffectIcon className={`text-yellow-300 opacity-80 ${isSmall ? 'w-3 h-3' : 'w-4 h-4'}`}/></span>
+           }
+           { card.role === 'support' ? 
+            <span title="Карта Поддержки"><HealingIcon className={`text-emerald-300 opacity-80 ${isSmall ? 'w-3 h-3' : 'w-4 h-4'}`}/></span> : 
+            <span title="Карта Атаки"><StrengthIcon className={`text-red-400 opacity-80 ${isSmall ? 'w-3 h-3' : 'w-4 h-4'}`}/></span>
+           }
           <RarityGem color={styles.gem} />
         </div>
-      </div>
-      
       {count && count > 1 && (
         <div className="absolute top-2 right-2 bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg border-2 border-purple-300 shadow-lg">
           x{count}

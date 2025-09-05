@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Page } from '../types';
 import { FapCoinIcon, LustGemIcon } from './IconComponents';
@@ -16,8 +17,8 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage, fapCoins, 
     <header className="bg-[color:var(--brand-panel)]/50 backdrop-blur-sm sticky top-0 z-50 shadow-lg shadow-black/20 border-b border-[color:var(--brand-teal)]/20">
       <div className="container mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center">
         <div className="flex items-center mb-2 sm:mb-0">
-          <img src="./logo.png" alt="Fap Collection Logo" className="h-12 mr-3" />
-          <h1 className="text-3xl font-heading text-shadow-lg" style={{color: 'var(--brand-orange)'}}>Fap Collection</h1>
+          <img src="./logo.png" alt="XCollection Logo" className="h-12 mr-3" />
+          <h1 className="text-3xl font-heading text-shadow-lg" style={{color: 'var(--brand-orange)'}}>XCollection</h1>
         </div>
         <nav className="flex-grow sm:flex sm:justify-center mb-2 sm:mb-0">
           <ul className="flex items-center space-x-1 sm:space-x-2 bg-[color:var(--brand-bg)]/50 rounded-full p-1.5 flex-wrap justify-center border border-[color:var(--brand-teal)]/10">

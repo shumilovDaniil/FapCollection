@@ -3,27 +3,15 @@ export enum Rarity {
   Rare = 'Редкая',
   Epic = 'Эпическая',
   Legendary = 'Легендарная',
-  Masturbatory = 'Мастурбаторская'
-}
-
-export enum FetishTag {
-  BDSM = 'BDSM',
-  Elven = 'Эльфийки',
-  MILF = 'MILF',
-  Tentacles = 'Тентакли',
-  Fantasy = 'Fantasy',
-  AltGirl = 'Alt Girl',
-  Furry = 'Furry',
-  Gothic = 'Готика'
 }
 
 export interface CardStats {
   strength: number;
-  agility: number;
-  charisma: number;
-  stamina: number;
-  rage: number;
+  healing: number;
 }
+
+export type CardRole = 'attack' | 'support';
+export type SpecialEffect = 'skip_turn' | 'steal_card' | 'enhance_next_attack' | 'second_heart';
 
 export interface Card {
   id: number;
@@ -31,8 +19,10 @@ export interface Card {
   rarity: Rarity;
   imageUrl: string;
   effect: string;
-  tags: FetishTag[];
+  role: CardRole;
   stats: CardStats;
+  specialEffect?: SpecialEffect;
+  effectValue?: number;
 }
 
 export interface PlayerCard extends Card {
@@ -51,6 +41,7 @@ export interface PlayerState {
 
 export enum Page {
   Collection = 'Коллекция',
+  Battle = 'Бой',
   Chests = 'Сундуки',
   Crafting = 'Крафт',
   Shop = 'Магазин',

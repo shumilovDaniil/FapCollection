@@ -1,12 +1,12 @@
 
 
 import React, { useState, useMemo } from 'react';
-import { PlayerCard, Card, Rarity, FetishTag } from '../types';
+import { PlayerCard, Card, Rarity } from '../types';
 import CardComponent from './CardComponent';
-import { RARITY_ORDER, ALL_TAGS } from '../constants';
+import { RARITY_ORDER } from '../constants';
 import { SortAscendingIcon, SortDescendingIcon } from './IconComponents';
 
-type SortableStat = 'strength' | 'agility' | 'charisma' | 'stamina' | 'rage';
+type SortableStat = 'strength' | 'healing';
 type SortBy = 'id' | 'name' | 'rarity' | SortableStat;
 type SortOrder = 'asc' | 'desc';
 
@@ -18,7 +18,6 @@ interface CollectionPageProps {
 const CollectionPage: React.FC<CollectionPageProps> = ({ cards, isModal = false }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [rarityFilter, setRarityFilter] = useState<Rarity | 'all'>('all');
-    const [tagFilter, setTagFilter] = useState<FetishTag | 'all'>('all');
     const [sortBy, setSortBy] = useState<SortBy>('id');
     const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
 
@@ -47,9 +46,6 @@ const CollectionPage: React.FC<CollectionPageProps> = ({ cards, isModal = false 
         if (rarityFilter !== 'all') {
             filtered = filtered.filter(({ card }) => card.rarity === rarityFilter);
         }
-        if (tagFilter !== 'all') {
-            filtered = filtered.filter(({ card }) => card.tags.includes(tagFilter));
-        }
 
         // Sorting
         const sorted = [...filtered].sort((a, b) => {
@@ -64,10 +60,7 @@ const CollectionPage: React.FC<CollectionPageProps> = ({ cards, isModal = false 
                     compare = RARITY_ORDER.indexOf(cardA.rarity) - RARITY_ORDER.indexOf(cardB.rarity);
                     break;
                 case 'strength':
-                case 'agility':
-                case 'charisma':
-                case 'stamina':
-                case 'rage':
+                case 'healing':
                     compare = cardA.stats[sortBy] - cardB.stats[sortBy];
                     break;
                 case 'id':
@@ -79,7 +72,7 @@ const CollectionPage: React.FC<CollectionPageProps> = ({ cards, isModal = false 
         });
 
         return sorted;
-    }, [groupedCards, searchQuery, rarityFilter, tagFilter, sortBy, sortOrder, isModal]);
+    }, [groupedCards, searchQuery, rarityFilter, sortBy, sortOrder, isModal]);
 
 
   if (cards.length === 0 && !isModal) {
@@ -108,10 +101,6 @@ const CollectionPage: React.FC<CollectionPageProps> = ({ cards, isModal = false 
                 <option value="all">Все редкости</option>
                 {RARITY_ORDER.map(r => <option key={r} value={r}>{r}</option>)}
             </select>
-            <select value={tagFilter} onChange={e => setTagFilter(e.target.value as FetishTag | 'all')} className={selectClassName} aria-label="Фильтр по тегу">
-                <option value="all">Все теги</option>
-                {ALL_TAGS.map(t => <option key={t} value={t}>{t}</option>)}
-            </select>
           </div>
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
             <select value={sortBy} onChange={e => setSortBy(e.target.value as SortBy)} className={selectClassName} aria-label="Сортировать по">
@@ -119,10 +108,7 @@ const CollectionPage: React.FC<CollectionPageProps> = ({ cards, isModal = false 
                 <option value="name">По имени</option>
                 <option value="rarity">По редкости</option>
                 <option value="strength">По силе</option>
-                <option value="agility">По ловкости</option>
-                <option value="charisma">По харизме</option>
-                <option value="stamina">По выносливости</option>
-                <option value="rage">По ярости</option>
+                <option value="healing">По исцелению</option>
             </select>
             <button
                 onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
