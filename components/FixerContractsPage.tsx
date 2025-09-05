@@ -50,7 +50,7 @@ const CooldownTimer: React.FC<{ endTime: number }> = ({ endTime }) => {
 
 
 const FixerContractsPage: React.FC<FixerContractsPageProps> = (props) => {
-    const { progress, playerCards, playerCurrencies, cardCooldowns, setPlayerCurrencies, setFixerProgress, setCardCooldowns } = props;
+    const { progress, allGameCards, playerCards, playerCurrencies, cardCooldowns, setPlayerCurrencies, setFixerProgress, setCardCooldowns } = props;
     
     const [stage, setStage] = useState<RaidStage>('district_selection');
     const [selectedDistrict, setSelectedDistrict] = useState<FixerDistrict | null>(null);
@@ -155,6 +155,7 @@ const FixerContractsPage: React.FC<FixerContractsPageProps> = (props) => {
             return <RaidInterface 
                         district={selectedDistrict} 
                         team={selectedTeam}
+                        allGameCards={allGameCards}
                         onEndRaid={handleShowRaidSummary} 
                     />;
         }

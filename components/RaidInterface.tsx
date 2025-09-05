@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { FixerDistrict, Card, RaidInterfaceProps, PlayerCard, KillStats } from '../types';
+import { FixerDistrict, Card, RaidInterfaceProps, PlayerCard, KillStats, Rarity } from '../types';
 import CardComponent from './CardComponent';
 import { EddyIcon, StrengthIcon } from './IconComponents';
 
@@ -29,7 +29,7 @@ const RaidHealthBar: React.FC<{ current: number; max: number; }> = ({ current, m
 );
 
 
-const RaidInterface: React.FC<RaidInterfaceProps> = ({ district, team, onEndRaid }) => {
+const RaidInterface: React.FC<RaidInterfaceProps> = ({ district, team, allGameCards, onEndRaid }) => {
     const [currentEnemy, setCurrentEnemy] = useState<Card | null>(null);
     const [maxHp, setMaxHp] = useState(0);
     const [currentHp, setCurrentHp] = useState(0);
@@ -56,12 +56,59 @@ const RaidInterface: React.FC<RaidInterfaceProps> = ({ district, team, onEndRaid
 
     const spawnNewEnemy = useCallback(() => {
         setIsEnemyDying(false);
-        const enemyCard = team[Math.floor(Math.random() * team.length)]; // Simplified for now
+        
+        let potentialEnemies: Card[] = [];
+        const rand = Math.random();
+
+        switch(district.id) {
+            case 'watson': {
+                const commons = allGameCards.filter(c => c.rarity === Rarity.Common);
+                const rares = allGameCards.filter(c => c.rarity === Rarity.Rare);
+                if (rand < 0.8 || rares.length === 0) {
+                    potentialEnemies = commons;
+                } else {
+                    potentialEnemies = rares;
+                }
+                break;
+            }
+            case 'pacifica': {
+                const rares = allGameCards.filter(c => c.rarity === Rarity.Rare);
+                const epics = allGameCards.filter(c => c.rarity === Rarity.Epic);
+                if (rand < 0.75 || epics.length === 0) {
+                    potentialEnemies = rares;
+                } else {
+                    potentialEnemies = epics;
+                }
+                break;
+            }
+            case 'city_center': {
+                const epics = allGameCards.filter(c => c.rarity === Rarity.Epic);
+                const legendaries = allGameCards.filter(c => c.rarity === Rarity.Legendary);
+                if (rand < 0.85 || legendaries.length === 0) {
+                    potentialEnemies = epics;
+                } else {
+                    potentialEnemies = legendaries;
+                }
+                break;
+            }
+            default:
+                potentialEnemies = allGameCards.filter(c => c.rarity === Rarity.Common);
+        }
+
+        if (potentialEnemies.length === 0) {
+            potentialEnemies = allGameCards.filter(c => c.rarity === Rarity.Common);
+        }
+         if (potentialEnemies.length === 0) {
+            potentialEnemies = allGameCards;
+        }
+
+        const enemyCard = potentialEnemies[Math.floor(Math.random() * potentialEnemies.length)];
         const newMaxHp = Math.floor(Math.random() * (district.hpRange[1] - district.hpRange[0] + 1)) + district.hpRange[0];
+        
         setCurrentEnemy(enemyCard);
         setMaxHp(newMaxHp);
         setCurrentHp(newMaxHp);
-    }, [team, district]);
+    }, [allGameCards, district]);
 
     useEffect(() => {
         addLog(`Рейд в районе "${district.name}" начался!`);
@@ -221,7 +268,7 @@ const RaidInterface: React.FC<RaidInterfaceProps> = ({ district, team, onEndRaid
                 <CardComponent card={currentEnemy} />
             </div>
 
-            <button onClick={() => onEndRaid(district.id, raidKills, raidEarnings, stunnedTeam.map(c => c.instanceId), killStats)} className="mt-8 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg transition-colors text-xl transform active-scale-95 shadow-lg shadow-red-600/20">
+            <button onClick={() => onEndRaid(district.id, raidKills, raidEarnings, stunnedTeam.map(c => c.instanceId), killStats)} className="mt-8 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg transition-colors text-xl transform active:scale-95 shadow-lg shadow-red-600/20">
                 Завершить Рейд
             </button>
         </div>

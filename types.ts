@@ -83,7 +83,7 @@ export interface FixerDistrict {
 
 export interface FixerProgress {
   [districtId: string]: {
-    kills: number;
+    kills: number; 
   };
 }
 
@@ -101,6 +101,7 @@ export interface FixerContractsPageProps {
 export interface RaidInterfaceProps {
   district: FixerDistrict;
   team: PlayerCard[];
+  allGameCards: Card[];
   onEndRaid: (districtId: string, kills: number, earnings: number, stunnedCardIds: string[], killStats: KillStats) => void;
 }
 
