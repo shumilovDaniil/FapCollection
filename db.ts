@@ -2,7 +2,7 @@ import { Card, PlayerCard, PlayerCurrencies, FixerProgress, CardCooldowns } from
 import { INITIAL_CARDS, INITIAL_PLAYER_CARDS, INITIAL_PLAYER_CURRENCIES } from './constants';
 
 const DB_NAME = 'FapCollectionDB';
-const DB_VERSION = 5; // Incremented for card cooldowns
+const DB_VERSION = 7; // Incremented for UI assets
 
 const STORE_GAME_CARDS = 'game_cards';
 const STORE_PLAYER_CARDS = 'player_cards';
@@ -10,6 +10,8 @@ const STORE_PLAYER_CURRENCIES = 'player_currencies';
 const STORE_CARD_IMAGES = 'card_images';
 const STORE_FIXER_PROGRESS = 'fixer_progress';
 const STORE_CARD_COOLDOWNS = 'card_cooldowns';
+const STORE_GAME_ASSETS = 'game_assets';
+const STORE_UI_ASSETS = 'ui_assets'; // New store for custom UI images
 
 let db: IDBDatabase;
 
@@ -72,6 +74,18 @@ const openDB = (): Promise<IDBDatabase> => {
                 if (!dbInstance.objectStoreNames.contains(STORE_CARD_COOLDOWNS)) {
                     const store = dbInstance.createObjectStore(STORE_CARD_COOLDOWNS, { keyPath: 'id' });
                     store.add({ id: 1, cooldowns: {} }); // Initialize with empty cooldowns
+                }
+            }
+            
+            if (oldVersion < 6) {
+                if (!dbInstance.objectStoreNames.contains(STORE_GAME_ASSETS)) {
+                    dbInstance.createObjectStore(STORE_GAME_ASSETS, { keyPath: 'key' });
+                }
+            }
+            
+            if (oldVersion < 7) {
+                if (!dbInstance.objectStoreNames.contains(STORE_UI_ASSETS)) {
+                    dbInstance.createObjectStore(STORE_UI_ASSETS, { keyPath: 'key' });
                 }
             }
 
@@ -246,5 +260,59 @@ export const getAllImages = (): Promise<Map<number, string>> => {
            resolve(imageMap);
        };
        request.onerror = () => reject(request.error);
+    });
+};
+
+// Game Assets
+export const setGameAsset = (key: string, data: ArrayBuffer): Promise<void> => {
+    return new Promise(async (resolve, reject) => {
+        await openDB();
+        const store = getStore(STORE_GAME_ASSETS, 'readwrite');
+        const request = store.put({ key, data });
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+};
+
+export const getAllGameAssets = (): Promise<Map<string, ArrayBuffer>> => {
+    return new Promise(async (resolve, reject) => {
+        await openDB();
+        const store = getStore(STORE_GAME_ASSETS, 'readonly');
+        const request = store.getAll();
+        request.onsuccess = () => {
+            const assetMap = new Map<string, ArrayBuffer>();
+            request.result.forEach((item: {key: string, data: ArrayBuffer}) => {
+                assetMap.set(item.key, item.data);
+            });
+            resolve(assetMap);
+        };
+        request.onerror = () => reject(request.error);
+    });
+};
+
+// UI Assets
+export const setUiAsset = (key: string, data: string): Promise<void> => {
+    return new Promise(async (resolve, reject) => {
+        await openDB();
+        const store = getStore(STORE_UI_ASSETS, 'readwrite');
+        const request = store.put({ key, data });
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+};
+
+export const getAllUiAssets = (): Promise<Map<string, string>> => {
+    return new Promise(async (resolve, reject) => {
+        await openDB();
+        const store = getStore(STORE_UI_ASSETS, 'readonly');
+        const request = store.getAll();
+        request.onsuccess = () => {
+            const assetMap = new Map<string, string>();
+            request.result.forEach((item: {key: string, data: string}) => {
+                assetMap.set(item.key, item.data);
+            });
+            resolve(assetMap);
+        };
+        request.onerror = () => reject(request.error);
     });
 };

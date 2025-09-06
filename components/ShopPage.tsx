@@ -63,7 +63,6 @@ const ShopPage: React.FC<ShopPageProps> = ({ currencies, setCurrencies }) => {
           </div>
         ))}
       </div>
-       <p className="text-center text-gray-500 mt-8 italic">Цены в магазине намеренно завышены. Экономика, б***ь!</p>
     </div>
   );
 };

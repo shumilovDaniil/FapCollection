@@ -1,10 +1,13 @@
 import React, { useState, useContext, useEffect, useMemo } from 'react';
 import { ImageContext } from '../context/ImageContext';
-import { Card, Rarity, CardStats, CardRole, SpecialEffect } from '../types';
+import { Card, Rarity, CardStats, CardRole, SpecialEffect, Page } from '../types';
+import { FIXER_DISTRICTS } from '../data/contracts';
 
 interface DeveloperPageProps {
     allCards: Card[];
     onImageUpload: (cardId: number, imageData: string) => void;
+    onAudioAssetUpload: (key: string, audioData: ArrayBuffer) => void;
+    onUiAssetUpload: (key: string, imageData: string) => void;
     onSaveCard: (card: Card) => Promise<void>;
     onDeleteCard: (cardId: number) => Promise<void>;
 }
@@ -21,8 +24,19 @@ const NEW_CARD_TEMPLATE: Omit<Card, 'id'> = {
     }
 }
 
+const pageToKeyMap: { [key in Page]: string } = {
+    [Page.Collection]: 'collection',
+    [Page.Battle]: 'battle',
+    [Page.FixerContracts]: 'contracts',
+    [Page.Chests]: 'chests',
+    [Page.Crafting]: 'crafting',
+    [Page.Shop]: 'shop',
+    [Page.Marketplace]: 'marketplace',
+    [Page.Developer]: 'developer',
+};
+
 const DeveloperPage: React.FC<DeveloperPageProps> = (props) => {
-    const { allCards, onImageUpload, onSaveCard, onDeleteCard } = props;
+    const { allCards, onImageUpload, onAudioAssetUpload, onUiAssetUpload, onSaveCard, onDeleteCard } = props;
     const customImages = useContext(ImageContext);
     const [selectedCardId, setSelectedCardId] = useState<string>('none');
     const [editableCard, setEditableCard] = useState<Card | null>(null);
@@ -70,6 +84,42 @@ const DeveloperPage: React.FC<DeveloperPageProps> = (props) => {
             console.error("Error reading file:", error);
             alert("Не удалось прочитать файл.");
         }
+        reader.readAsDataURL(file);
+    };
+    
+    const handleAudioUpload = (key: string, file: File | undefined) => {
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const audioData = event.target?.result as ArrayBuffer;
+            if (audioData) {
+                onAudioAssetUpload(key, audioData);
+                alert(`Звук для "${key}" обновлен!`);
+            }
+        };
+        reader.onerror = (error) => {
+            console.error("Error reading audio file:", error);
+            alert("Не удалось прочитать аудиофайл.");
+        };
+        reader.readAsArrayBuffer(file);
+    };
+
+    const handleUiAssetUpload = (key: string, file: File | undefined) => {
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const imageDataUrl = event.target?.result as string;
+            if (imageDataUrl) {
+                onUiAssetUpload(key, imageDataUrl);
+                alert(`UI ассет для "${key}" обновлен!`);
+            }
+        };
+        reader.onerror = (error) => {
+            console.error("Error reading UI asset file:", error);
+            alert("Не удалось прочитать файл.");
+        };
         reader.readAsDataURL(file);
     };
 
@@ -137,12 +187,35 @@ const DeveloperPage: React.FC<DeveloperPageProps> = (props) => {
 
     const inputClass = "w-full bg-gray-800 border border-[color:var(--brand-accent)]/50 px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[color:var(--brand-accent)] transition";
     const labelClass = "block text-sm font-bold text-[color:var(--brand-accent)] mb-1 uppercase tracking-wider";
+    
+    const fileInputClass = `${inputClass} cursor-pointer file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-[color:var(--brand-accent)] file:text-black hover:file:bg-[color:var(--brand-warning)]`;
+
+    const soundUploadSection = (title: string, baseKey: string) => (
+        <div className="space-y-3 bg-gray-900/50 p-4 border border-[color:var(--brand-accent)]/20">
+            <h4 className="text-xl font-heading text-[color:var(--brand-accent)]/80 text-center">{title}</h4>
+            {[1, 2, 3, 4].map(i => (
+                <div key={`${baseKey}${i}`}>
+                    <label htmlFor={`upload-${baseKey}-${i}`} className="text-xs font-semibold text-gray-400">
+                        Вариант {i}
+                    </label>
+                    <input
+                        id={`upload-${baseKey}-${i}`}
+                        type="file"
+                        accept="audio/*"
+                        className={fileInputClass}
+                        onChange={(e) => handleAudioUpload(`${baseKey}${i}`, e.target.files?.[0])}
+                    />
+                </div>
+            ))}
+        </div>
+    );
 
     return (
         <div className="animate-fade-in">
             <h2 className="text-3xl font-heading mb-8 text-[color:var(--brand-accent)] text-center">Меню Разработчика</h2>
             
-            <div className="max-w-4xl mx-auto mb-8">
+            <div className="max-w-4xl mx-auto mb-8 bg-[color:var(--brand-panel)] p-6 border border-[color:var(--brand-accent)]/50 space-y-4">
+                 <h3 className="text-2xl font-heading text-[color:var(--brand-accent)]">Редактор Карт</h3>
                  <label htmlFor="card-select" className={labelClass}>Выберите карту для редактирования или создайте новую</label>
                  <select 
                     id="card-select"
@@ -159,7 +232,7 @@ const DeveloperPage: React.FC<DeveloperPageProps> = (props) => {
             </div>
 
             {editableCard && (
-                <form onSubmit={handleSubmit} className="bg-[color:var(--brand-panel)] p-6 border border-[color:var(--brand-accent)]/50 space-y-6 max-w-4xl mx-auto">
+                <form onSubmit={handleSubmit} className="bg-[color:var(--brand-panel)] p-6 border border-[color:var(--brand-accent)]/50 space-y-6 max-w-4xl mx-auto mb-8">
                     <div className="flex flex-col md:flex-row gap-8">
                         {/* Image Section */}
                         <div className="w-full md:w-1/3 flex-shrink-0">
@@ -255,6 +328,58 @@ const DeveloperPage: React.FC<DeveloperPageProps> = (props) => {
                     </div>
                 </form>
             )}
+            
+            <div className="max-w-4xl mx-auto mt-8 bg-[color:var(--brand-panel)] p-6 border border-[color:var(--brand-accent)]/50 space-y-4">
+                 <h3 className="text-2xl font-heading text-[color:var(--brand-accent)] text-center mb-4">Игровые Звуки</h3>
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {soundUploadSection('Звук удара', 'hitSound')}
+                    {soundUploadSection('Звук смерти', 'deathSound')}
+                 </div>
+            </div>
+
+            <div className="max-w-4xl mx-auto mt-8 bg-[color:var(--brand-panel)] p-6 border border-[color:var(--brand-accent)]/50 space-y-4">
+                <h3 className="text-2xl font-heading text-[color:var(--brand-accent)] text-center mb-4">UI Кастомизация</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                    {/* Page Backgrounds */}
+                    <div className="space-y-3 bg-gray-900/50 p-4 border border-[color:var(--brand-accent)]/20">
+                        <h4 className="text-xl font-heading text-[color:var(--brand-accent)]/80 text-center">Фоны Страниц</h4>
+                        {Object.values(Page).map(page => {
+                            const key = `background_${pageToKeyMap[page]}`;
+                            return (
+                                <div key={key}>
+                                    <label htmlFor={`upload-bg-${page}`} className="text-sm font-semibold text-gray-400">{page}</label>
+                                    <input
+                                        id={`upload-bg-${page}`}
+                                        type="file"
+                                        accept="image/*"
+                                        className={fileInputClass}
+                                        onChange={(e) => handleUiAssetUpload(key, e.target.files?.[0])}
+                                    />
+                                </div>
+                            );
+                        })}
+                    </div>
+                    {/* Contract Images */}
+                    <div className="space-y-3 bg-gray-900/50 p-4 border border-[color:var(--brand-accent)]/20">
+                        <h4 className="text-xl font-heading text-[color:var(--brand-accent)]/80 text-center">Превью Контрактов</h4>
+                        {FIXER_DISTRICTS.map(district => {
+                            const key = `contract_${district.id}`;
+                            return (
+                                <div key={key}>
+                                    <label htmlFor={`upload-contract-${district.id}`} className="text-sm font-semibold text-gray-400">{district.name}</label>
+                                    <input
+                                        id={`upload-contract-${district.id}`}
+                                        type="file"
+                                        accept="image/*"
+                                        className={fileInputClass}
+                                        onChange={(e) => handleUiAssetUpload(key, e.target.files?.[0])}
+                                    />
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };

@@ -15,11 +15,10 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage, eddies, lu
   return (
     <header className="bg-black/50 backdrop-blur-sm sticky top-0 z-50 border-b-2 border-[color:var(--brand-accent)]">
       <div className="container mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center">
-        <div className="flex items-center mb-2 sm:mb-0">
-          <img src="./logo.png" alt="XCollection Logo" className="h-12 mr-3" />
-          <h1 className="text-3xl font-heading text-[color:var(--brand-accent)]">XCollection</h1>
+        <div className="flex items-center mb-2 mr-2 sm:mb-0">
+          <h1 className="text-1xl font-heading text-[color:var(--brand-accent)]">XCollection</h1>
         </div>
-        <nav className="flex-grow sm:flex sm:justify-center mb-2 sm:mb-0">
+        <nav className="flex-grow sm:flex sm:justify-center mb-2 mr-2 sm:mb-0">
           <ul className="flex items-center space-x-1 sm:space-x-2 bg-[color:var(--brand-panel)]/50 p-1.5 flex-wrap justify-center border border-[color:var(--brand-accent)]/50">
             {navItems.map((page) => (
               <li key={page}>

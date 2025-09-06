@@ -13,8 +13,21 @@ import FixerContractsPage from './components/FixerContractsPage';
 import Modal from './components/Modal';
 import * as db from './db';
 import { ImageContext } from './context/ImageContext';
+import { AudioContext } from './context/AudioContext';
+import { UiContext } from './context/UiContext';
+import { decodeAudioData } from './utils/audio';
 import CheatMenu from './components/CheatMenu';
 
+const pageToBackgroundKeyMap: { [key in Page]: string } = {
+    [Page.Collection]: 'collection',
+    [Page.Battle]: 'battle',
+    [Page.FixerContracts]: 'contracts',
+    [Page.Chests]: 'chests',
+    [Page.Crafting]: 'crafting',
+    [Page.Shop]: 'shop',
+    [Page.Marketplace]: 'marketplace',
+    [Page.Developer]: 'developer',
+};
 
 const App: React.FC = () => {
     const [currentPage, setCurrentPage] = useState<Page>(Page.Collection);
@@ -26,6 +39,8 @@ const App: React.FC = () => {
     
     const [modalContent, setModalContent] = useState<React.ReactNode | null>(null);
     const [customImages, setCustomImages] = useState<Map<number, string>>(new Map());
+    const [audioAssets, setAudioAssets] = useState<Map<string, AudioBuffer>>(new Map());
+    const [uiAssets, setUiAssets] = useState<Map<string, string>>(new Map());
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -35,13 +50,15 @@ const App: React.FC = () => {
             try {
                 setLoading(true);
                 await db.initDB();
-                const [gameCards, pCards, pCurrencies, images, fxProgress, cooldowns] = await Promise.all([
+                const [gameCards, pCards, pCurrencies, images, fxProgress, cooldowns, assets, uiAssetsData] = await Promise.all([
                     db.getGameCards(),
                     db.getPlayerCards(),
                     db.getPlayerCurrencies(),
                     db.getAllImages(),
                     db.getFixerProgress(),
                     db.getCardCooldowns(),
+                    db.getAllGameAssets(),
+                    db.getAllUiAssets(),
                 ]);
                 setAllGameCards(gameCards);
                 setPlayerCards(pCards);
@@ -49,6 +66,20 @@ const App: React.FC = () => {
                 setCustomImages(images);
                 setFixerProgress(fxProgress);
                 setCardCooldowns(cooldowns);
+                setUiAssets(uiAssetsData);
+                
+                // Decode audio assets
+                const decodedAssets = new Map<string, AudioBuffer>();
+                for (const [key, data] of assets.entries()) {
+                    try {
+                        const audioBuffer = await decodeAudioData(data);
+                        decodedAssets.set(key, audioBuffer);
+                    } catch (audioErr) {
+                        console.error(`Failed to decode audio asset "${key}":`, audioErr);
+                    }
+                }
+                setAudioAssets(decodedAssets);
+
             } catch (err) {
                 console.error("Failed to load game data:", err);
                 setError("Не удалось загрузить игровые данные. Попробуйте обновить страницу.");
@@ -173,6 +204,21 @@ const App: React.FC = () => {
         setCustomImages(prev => new Map(prev).set(cardId, imageData));
     }, []);
     
+    const handleAudioAssetUpdate = useCallback(async (key: string, audioData: ArrayBuffer) => {
+        await db.setGameAsset(key, audioData);
+        try {
+            const audioBuffer = await decodeAudioData(audioData);
+            setAudioAssets(prev => new Map(prev).set(key, audioBuffer));
+        } catch (err) {
+            console.error("Failed to decode and update audio asset in state:", err);
+        }
+    }, []);
+
+    const handleUiAssetUpdate = useCallback(async (key: string, imageData: string) => {
+        await db.setUiAsset(key, imageData);
+        setUiAssets(prev => new Map(prev).set(key, imageData));
+    }, []);
+    
     const handleGameCardUpdate = async (card: Card) => {
         await db.saveGameCard(card);
         const updatedCards = await db.getGameCards();
@@ -220,7 +266,9 @@ const App: React.FC = () => {
             case Page.Developer:
                 return <DeveloperPage 
                             allCards={allGameCards} 
-                            onImageUpload={handleImageUpdate} 
+                            onImageUpload={handleImageUpdate}
+                            onAudioAssetUpload={handleAudioAssetUpdate}
+                            onUiAssetUpload={handleUiAssetUpdate}
                             onSaveCard={handleGameCardUpdate} 
                             onDeleteCard={handleDeleteGameCard}
                         />;
@@ -243,26 +291,42 @@ const App: React.FC = () => {
         return <div className="min-h-screen bg-[color:var(--brand-bg)] flex items-center justify-center text-red-400 text-xl">{error}</div>
     }
 
+    const backgroundKey = `background_${pageToBackgroundKeyMap[currentPage]}`;
+    const customBackground = uiAssets.get(backgroundKey);
+
+    const backgroundStyle: React.CSSProperties = customBackground
+        ? { backgroundImage: `url(${customBackground})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }
+        : {
+            backgroundImage:
+                'linear-gradient(rgba(198, 223, 85, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(198, 223, 85, 0.05) 1px, transparent 1px)',
+            backgroundSize: '2rem 2rem',
+            backgroundAttachment: 'fixed'
+          };
+
     return (
         <ImageContext.Provider value={customImages}>
-            <CheatMenu onAddCurrency={handleAddCurrency} />
-            <div className="min-h-screen bg-[color:var(--brand-bg)] text-gray-200">
-                <Header
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                    eddies={playerCurrencies.eddies}
-                    lustGems={playerCurrencies.lustGems}
-                />
-                <main className="p-4 md:p-8">
-                    {renderPage()}
-                </main>
-                {modalContent && (
-                    <Modal onClose={() => setModalContent(null)}>
-                        <h2 className="text-4xl font-heading text-center mb-6 text-[color:var(--brand-accent)]">Новые Карты!</h2>
-                        {modalContent}
-                    </Modal>
-                )}
-            </div>
+            <AudioContext.Provider value={audioAssets}>
+                <UiContext.Provider value={uiAssets}>
+                    <CheatMenu onAddCurrency={handleAddCurrency} />
+                    <div className="min-h-screen bg-[color:var(--brand-bg)] text-gray-200" style={backgroundStyle}>
+                        <Header
+                            currentPage={currentPage}
+                            setCurrentPage={setCurrentPage}
+                            eddies={playerCurrencies.eddies}
+                            lustGems={playerCurrencies.lustGems}
+                        />
+                        <main className="p-4 md:p-8">
+                            {renderPage()}
+                        </main>
+                        {modalContent && (
+                            <Modal onClose={() => setModalContent(null)}>
+                                <h2 className="text-4xl font-heading text-center mb-6 text-[color:var(--brand-accent)]">Новые Карты!</h2>
+                                {modalContent}
+                            </Modal>
+                        )}
+                    </div>
+                </UiContext.Provider>
+            </AudioContext.Provider>
         </ImageContext.Provider>
     );
 };

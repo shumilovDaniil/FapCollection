@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 import { PlayerCard, FixerDistrict, FixerContractsPageProps, CardCooldowns, KillStats } from '../types';
 import { FIXER_DISTRICTS } from '../constants';
 import * as db from '../db';
@@ -6,6 +6,7 @@ import RaidInterface from './RaidInterface';
 import CardComponent from './CardComponent';
 import { EddyIcon } from './IconComponents';
 import Modal from './Modal';
+import { UiContext } from '../context/UiContext';
 
 
 const LockIcon = () => (
@@ -56,6 +57,7 @@ const FixerContractsPage: React.FC<FixerContractsPageProps> = (props) => {
     const [selectedDistrict, setSelectedDistrict] = useState<FixerDistrict | null>(null);
     const [selectedTeam, setSelectedTeam] = useState<PlayerCard[]>([]);
     const [raidSummary, setRaidSummary] = useState<RaidSummary | null>(null);
+    const uiAssets = useContext(UiContext);
 
     const isDistrictUnlocked = (districtId: string): boolean => {
         const district = FIXER_DISTRICTS.find(d => d.id === districtId);
@@ -219,11 +221,13 @@ const FixerContractsPage: React.FC<FixerContractsPageProps> = (props) => {
                         const isUnlocked = isDistrictUnlocked(district.id);
                         const requiredKills = district.unlockRequirement?.kills || 0;
                         const requiredDistrictName = FIXER_DISTRICTS.find(d => d.id === district.unlockRequirement?.districtId)?.name;
+                        const customImageUrl = uiAssets.get(`contract_${district.id}`);
+                        const displayImageUrl = customImageUrl || district.imageUrl;
                         
                         return (
                             <div key={district.id} className={`bg-gray-900 border-2 border-gray-700 overflow-hidden transition-all duration-300 ${isUnlocked ? 'hover:border-[color:var(--brand-accent)] hover:scale-105' : 'opacity-60 saturate-50'}`}>
                                 <div className="relative h-48">
-                                    <img src={district.imageUrl} alt={district.name} className="w-full h-full object-cover"/>
+                                    <img src={displayImageUrl} alt={district.name} className="w-full h-full object-cover"/>
                                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent"></div>
                                     <h3 className="absolute bottom-4 left-4 text-4xl font-heading text-white">{district.name}</h3>
                                 </div>

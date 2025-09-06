@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 import { FixerDistrict, Card, RaidInterfaceProps, PlayerCard, KillStats, Rarity } from '../types';
 import CardComponent from './CardComponent';
 import { EddyIcon, StrengthIcon } from './IconComponents';
+import { AudioContext } from '../context/AudioContext';
+import { playSound } from '../utils/audio';
 
 interface DamageNumber {
     id: number;
@@ -49,6 +51,28 @@ const RaidInterface: React.FC<RaidInterfaceProps> = ({ district, team, allGameCa
 
     const [isGettingHit, setIsGettingHit] = useState(false);
     const [isEnemyDying, setIsEnemyDying] = useState(false);
+    
+    const audioAssets = useContext(AudioContext);
+    const [lastHitSoundIndex, setLastHitSoundIndex] = useState<number | null>(null);
+    const [lastDeathSoundIndex, setLastDeathSoundIndex] = useState<number | null>(null);
+    
+    const hitSounds = useMemo(() => {
+        return [
+            audioAssets.get('hitSound1'),
+            audioAssets.get('hitSound2'),
+            audioAssets.get('hitSound3'),
+            audioAssets.get('hitSound4'),
+        ].filter((sound): sound is AudioBuffer => !!sound);
+    }, [audioAssets]);
+
+    const deathSounds = useMemo(() => {
+        return [
+            audioAssets.get('deathSound1'),
+            audioAssets.get('deathSound2'),
+            audioAssets.get('deathSound3'),
+            audioAssets.get('deathSound4'),
+        ].filter((sound): sound is AudioBuffer => !!sound);
+    }, [audioAssets]);
     
     const addLog = useCallback((message: string) => {
         setBattleLog(prev => [message, ...prev.slice(0, 9)]);
@@ -121,6 +145,17 @@ const RaidInterface: React.FC<RaidInterfaceProps> = ({ district, team, allGameCa
         const attacker = activeTeam[attackerIndex];
         const damageDealt = attacker.stats.strength;
 
+        // Play random hit sound, avoiding repetition
+        if (hitSounds.length > 0) {
+            let nextIndex;
+            do {
+                nextIndex = Math.floor(Math.random() * hitSounds.length);
+            } while (hitSounds.length > 1 && nextIndex === lastHitSoundIndex);
+            
+            playSound(hitSounds[nextIndex]);
+            setLastHitSoundIndex(nextIndex);
+        }
+
         // Visual Hit Effects
         setIsGettingHit(true);
         setTimeout(() => setIsGettingHit(false), 200);
@@ -146,6 +181,17 @@ const RaidInterface: React.FC<RaidInterfaceProps> = ({ district, team, allGameCa
         setAttackerIndex(prev => (prev + 1) % activeTeam.length);
 
         if (newHp <= 0) {
+            // Play random death sound, avoiding repetition
+            if (deathSounds.length > 0) {
+                let nextIndex;
+                do {
+                    nextIndex = Math.floor(Math.random() * deathSounds.length);
+                } while (deathSounds.length > 1 && nextIndex === lastDeathSoundIndex);
+                
+                playSound(deathSounds[nextIndex]);
+                setLastDeathSoundIndex(nextIndex);
+            }
+
             const reward = Math.floor(Math.random() * (district.rewardRange[1] - district.rewardRange[0] + 1)) + district.rewardRange[0];
             addLog(`💥 "${attacker.name}" уничтожил(а) "${currentEnemy.name}"!`);
             
