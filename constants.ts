@@ -7,13 +7,14 @@ export { FIXER_DISTRICTS }; // Re-export for the new contracts mode
 
 export const RARITY_ORDER: Rarity[] = [Rarity.Common, Rarity.Rare, Rarity.Epic, Rarity.Legendary];
 
-// FIX: Added 'gem' property to provide a color for the RarityGem component.
-export const RARITY_STYLES: { [key in Rarity]: { bg: string; border: string; text: string; shadow: string; ring: string; gem: string } } = {
-  [Rarity.Common]: { bg: 'bg-gray-800', border: 'border-gray-500', text: 'text-gray-200', shadow: 'shadow-gray-900/50', ring: 'ring-gray-500', gem: 'bg-gray-400' },
-  [Rarity.Rare]: { bg: 'bg-blue-900', border: 'border-sky-500', text: 'text-sky-200', shadow: 'shadow-sky-700/50', ring: 'ring-sky-500', gem: 'bg-sky-400' },
-  [Rarity.Epic]: { bg: 'bg-purple-900', border: 'border-purple-500', text: 'text-purple-200', shadow: 'shadow-purple-700/50', ring: 'ring-purple-500', gem: 'bg-purple-400' },
-  [Rarity.Legendary]: { bg: 'bg-orange-900', border: 'border-amber-500', text: 'text-amber-200', shadow: 'shadow-amber-700/50', ring: 'ring-amber-500', gem: 'bg-amber-400' },
+// Updated for cyberpunk theme
+export const RARITY_STYLES: { [key in Rarity]: { bg: string; border: string; text: string; shadow: string; ring: string; gem: string; textShadowClass: string; typeIconBg: string; } } = {
+  [Rarity.Common]: { bg: 'bg-gray-900/50', border: 'border-gray-600', text: 'text-gray-400', shadow: '', ring: 'ring-gray-500', gem: 'bg-gray-400', textShadowClass: 'text-shadow-none', typeIconBg: 'bg-gray-600' },
+  [Rarity.Rare]: { bg: 'bg-black/50', border: 'border-[#c6df55]/50', text: 'text-[#c6df55]', shadow: '', ring: 'ring-[#c6df55]', gem: 'bg-sky-400', textShadowClass: '', typeIconBg: 'bg-[#c6df55]' },
+  [Rarity.Epic]: { bg: 'bg-black/50', border: 'border-[#b33e34]', text: 'text-[#b33e34]', shadow: '', ring: 'ring-[#b33e34]', gem: 'bg-purple-400', textShadowClass: 'text-shadow-none', typeIconBg: 'bg-[#b33e34]' },
+  [Rarity.Legendary]: { bg: 'bg-black/50', border: 'border-[#c6df55]', text: 'text-[#c6df55]', shadow: 'shadow-[0_0_15px_rgba(198,223,85,0.7)]', ring: 'ring-[#c6df55]', gem: 'bg-amber-400', textShadowClass: '', typeIconBg: 'bg-[#c6df55]' },
 };
+
 
 export const INITIAL_PLAYER_CURRENCIES: PlayerCurrencies = {
   eddies: 1000,

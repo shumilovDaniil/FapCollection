@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState } from 'react';
 import { Card, Rarity } from '../types';
 import { RARITY_STYLES } from '../constants';
-import { StrengthIcon, HealingIcon, SpecialEffectIcon } from './IconComponents';
+import { StrengthIcon, HealingIcon, SpecialEffectIcon, AttackRoleIcon, SupportRoleIcon } from './IconComponents';
 import { ImageContext } from '../context/ImageContext';
 import Tooltip from './Tooltip';
 
@@ -12,15 +12,6 @@ interface CardComponentProps {
   className?: string;
   size?: 'normal' | 'small';
 }
-
-const RarityGem: React.FC<{ rarity: Rarity }> = ({ rarity }) => {
-    const styles = RARITY_STYLES[rarity];
-    return (
-        <Tooltip content={`Редкость: ${rarity}`}>
-            <div className={`w-3 h-3 rounded-full ${styles.gem} shadow-lg ring-1 ring-white/50`}></div>
-        </Tooltip>
-    );
-};
 
 const getSpecialEffectDescription = (card: Card): string => {
     switch (card.specialEffect) {
@@ -42,6 +33,7 @@ const CardComponent: React.FC<CardComponentProps> = ({ card, count, onClick, cla
   const customImages = useContext(ImageContext);
   const displayImageUrl = customImages.get(card.id) || card.imageUrl;
   const isSmall = size === 'small';
+  const typeIconColor = (card.rarity === Rarity.Rare || card.rarity === Rarity.Legendary) ? 'text-black' : 'text-white';
 
   const cardRef = useRef<HTMLDivElement>(null);
   const [style, setStyle] = useState<React.CSSProperties>({});
@@ -72,24 +64,24 @@ const CardComponent: React.FC<CardComponentProps> = ({ card, count, onClick, cla
   return (
     <div
       ref={cardRef}
-      className={`relative rounded-3xl overflow-hidden shadow-lg transition-shadow duration-300 aspect-[2/3] w-full max-w-[250px] group ${onClick ? 'cursor-pointer' : ''} ${className} ${styles.shadow}`}
+      className={`relative overflow-hidden transition-shadow duration-300 aspect-[2/3] w-full max-w-[250px] group ${onClick ? 'cursor-pointer' : ''} ${className} ${styles.shadow}`}
       style={{ transformStyle: 'preserve-3d', ...style }}
       onClick={onClick}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
       {/* Background Image Layer */}
-      <img src={displayImageUrl} alt={card.name} className="absolute inset-0 w-full h-full object-cover rounded-3xl" style={{ transform: 'translateZ(-20px)' }} />
+      <img src={displayImageUrl} alt={card.name} className="absolute inset-0 w-full h-full object-cover" style={{ transform: 'translateZ(-20px)' }} />
       
       {/* Vignette/Gloss Layer */}
-      <div className="absolute inset-0 rounded-3xl" style={{ boxShadow: 'inset 0px 0px 50px 20px rgba(0,0,0,0.5)', transform: 'translateZ(0px)' }}></div>
+      <div className="absolute inset-0" style={{ boxShadow: 'inset 0px 0px 50px 20px rgba(0,0,0,0.7)', transform: 'translateZ(0px)' }}></div>
       
       {/* Border based on rarity */}
-      <div className={`absolute inset-0 rounded-3xl border-4 ${styles.border} opacity-70 group-hover:opacity-100 transition-opacity duration-300`} style={{ transform: 'translateZ(10px)' }}></div>
+      <div className={`absolute inset-0 border-4 ${styles.border} opacity-70 group-hover:opacity-100 transition-opacity duration-300`} style={{ transform: 'translateZ(10px)' }}></div>
 
       {/* Content Layer */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 via-black/50 to-transparent flex flex-col justify-end" style={{ transform: 'translateZ(40px)' }}>
-        <h3 className={`font-black font-heading leading-tight drop-shadow-lg ${styles.text} ${isSmall ? 'text-base' : 'text-2xl'}`}>{card.name}</h3>
+      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 via-black/60 to-transparent flex flex-col justify-end" style={{ transform: 'translateZ(40px)' }}>
+        <h3 className={`font-black font-heading leading-tight drop-shadow-lg ${styles.text} ${styles.textShadowClass} ${isSmall ? 'text-base' : 'text-2xl'}`}>{card.name}</h3>
         <p className={`font-bold ${styles.text} opacity-80 uppercase tracking-widest ${isSmall ? 'text-[9px]' : 'text-xs'}`}>
           {card.rarity}
         </p>
@@ -117,11 +109,18 @@ const CardComponent: React.FC<CardComponentProps> = ({ card, count, onClick, cla
                 <SpecialEffectIcon className={`text-yellow-300 drop-shadow-lg ${isSmall ? 'w-4 h-4' : 'w-5 h-5'}`}/>
             </Tooltip>
            }
-          <RarityGem rarity={card.rarity} />
+           <Tooltip content={`Тип карты: ${card.role === 'attack' ? 'Атака' : 'Поддержка'}`}>
+                <div className={`flex items-center justify-center rounded-full ${styles.typeIconBg} ${isSmall ? 'w-5 h-5' : 'w-6 h-6'}`}>
+                  {card.role === 'attack' 
+                      ? <AttackRoleIcon className={`${typeIconColor} ${isSmall ? 'w-3 h-3' : 'w-4 h-4'}`} /> 
+                      : <SupportRoleIcon className={`${typeIconColor} ${isSmall ? 'w-3 h-3' : 'w-4 h-4'}`} />
+                  }
+                </div>
+            </Tooltip>
       </div>
 
       {count && count > 1 && (
-        <div className="absolute top-2 left-2 bg-purple-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg border-2 border-purple-300 shadow-lg" style={{ transform: 'translateZ(50px)' }}>
+        <div className="absolute top-2 left-2 bg-[color:var(--brand-warning)] text-white w-8 h-8 flex items-center justify-center font-bold text-lg border-2 border-white/50" style={{ transform: 'translateZ(50px)' }}>
           x{count}
         </div>
       )}

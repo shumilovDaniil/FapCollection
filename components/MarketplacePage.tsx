@@ -72,14 +72,14 @@ const MarketplacePage: React.FC<MarketplacePageProps> = ({ playerCards, setPlaye
     return (
         <div className="animate-fade-in space-y-12">
             <div>
-                <h2 className="text-5xl font-heading mb-6 text-[color:var(--brand-orange)] text-center">Торговая Площадка</h2>
+                <h2 className="text-3xl font-heading mb-6 text-[color:var(--brand-accent)] text-center">Торговая Площадка</h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                     {listings.map(listing => (
                         <div key={listing.instanceId} className="flex flex-col items-center">
                             <CardComponent card={listing} />
                             <button 
                                 onClick={() => handleBuy(listing)}
-                                className="w-full mt-2 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-3 rounded-lg transition-colors flex items-center justify-center text-sm transform active:scale-95"
+                                className="w-full mt-2 bg-[color:var(--brand-accent)] hover:bg-[color:var(--brand-warning)] text-black font-bold py-2 px-3 transition-colors flex items-center justify-center text-sm transform active:scale-95"
                             >
                                 <span className="mr-2">Купить</span>
                                 <span className="flex items-center font-semibold">
@@ -94,7 +94,7 @@ const MarketplacePage: React.FC<MarketplacePageProps> = ({ playerCards, setPlaye
             </div>
 
             <div>
-                <h2 className="text-5xl font-heading mb-6 text-[color:var(--brand-orange)] text-center">Продать Свои Карты</h2>
+                <h2 className="text-3xl font-heading mb-6 text-[color:var(--brand-accent)] text-center">Продать Свои Карты</h2>
                 {groupedPlayerCards.length === 0 ? (
                     <p className="text-center text-gray-400">У вас нет карт для продажи.</p>
                 ) : (
@@ -104,7 +104,7 @@ const MarketplacePage: React.FC<MarketplacePageProps> = ({ playerCards, setPlaye
                                 <CardComponent card={card} count={instances.length} />
                                 <button 
                                     onClick={() => handleSell(instances[0])}
-                                    className="w-full mt-2 bg-[color:var(--brand-orange)] hover:brightness-110 text-gray-900 font-bold py-2 px-3 rounded-lg transition-colors transform active:scale-95"
+                                    className="w-full mt-2 bg-[color:var(--brand-warning)] hover:brightness-110 text-white font-bold py-2 px-3 transition-colors transform active:scale-95"
                                 >
                                     Продать
                                 </button>

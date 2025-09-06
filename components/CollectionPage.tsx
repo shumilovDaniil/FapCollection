@@ -1,6 +1,3 @@
-
-
-
 import React, { useState, useMemo } from 'react';
 import { PlayerCard, Card, Rarity } from '../types';
 import CardComponent from './CardComponent';
@@ -79,22 +76,22 @@ const CollectionPage: React.FC<CollectionPageProps> = ({ cards, isModal = false 
   if (cards.length === 0 && !isModal) {
     return (
         <div className="text-center text-gray-400 py-20">
-            <h2 className="text-4xl font-heading text-[color:var(--brand-orange)]">Коллекция пуста</h2>
+            <h2 className="text-4xl font-heading text-[color:var(--brand-accent)]">Коллекция пуста</h2>
             <p className="mt-2 text-lg">Откройте сундуки, чтобы получить новые карты!</p>
         </div>
     );
   }
   
-  const selectClassName = "bg-[color:var(--brand-panel)] border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[color:var(--brand-orange)] transition w-full sm:w-auto font-semibold";
+  const selectClassName = "bg-[color:var(--brand-panel)] border border-[color:var(--brand-accent)]/50 px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[color:var(--brand-accent)] transition w-full sm:w-auto font-semibold";
 
   const filterControls = (
-      <div className="mb-8 p-4 bg-[color:var(--brand-panel)]/50 rounded-xl border border-gray-700 flex flex-col sm:flex-row flex-wrap gap-4 items-center justify-center animate-fade-in shadow-lg">
+      <div className="mb-8 p-4 bg-[color:var(--brand-panel)]/50 border border-[color:var(--brand-accent)]/50 flex flex-col sm:flex-row flex-wrap gap-4 items-center justify-center animate-fade-in">
           <input
               type="text"
               placeholder="Поиск по названию..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-[color:var(--brand-panel)] border border-gray-600 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[color:var(--brand-orange)] transition w-full sm:w-auto flex-grow font-semibold"
+              className="bg-[color:var(--brand-panel)] border border-[color:var(--brand-accent)]/50 px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[color:var(--brand-accent)] transition w-full sm:w-auto flex-grow font-semibold"
               aria-label="Поиск по названию"
           />
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
@@ -113,7 +110,7 @@ const CollectionPage: React.FC<CollectionPageProps> = ({ cards, isModal = false 
             </select>
             <button
                 onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                className="p-2 bg-[color:var(--brand-panel)] border border-gray-600 rounded-lg text-white hover:bg-[color:var(--brand-teal)] hover:text-white focus:outline-none focus:ring-2 focus:ring-[color:var(--brand-orange)] transition flex-shrink-0"
+                className="p-2 bg-[color:var(--brand-panel)] border border-[color:var(--brand-accent)]/50 text-white hover:bg-[color:var(--brand-accent)] hover:text-black focus:outline-none focus:ring-2 focus:ring-[color:var(--brand-accent)] transition flex-shrink-0"
                 aria-label={`Порядок сортировки: ${sortOrder === 'asc' ? 'по возрастанию' : 'по убыванию'}`}
             >
                 {sortOrder === 'asc' ? <SortAscendingIcon className="w-5 h-5" /> : <SortDescendingIcon className="w-5 h-5" />}
@@ -132,8 +129,8 @@ const CollectionPage: React.FC<CollectionPageProps> = ({ cards, isModal = false 
       {!isModal && (
         <>
             <div className="text-center mb-6">
-                <h2 className="text-5xl font-heading text-[color:var(--brand-orange)] inline-block">Моя Коллекция</h2>
-                <div className="h-1 w-32 bg-[color:var(--brand-teal)] rounded-full mx-auto mt-2 shadow-[0_0_15px_rgba(20,184,166,0.5)]"></div>
+                <h2 className="text-3xl font-heading text-[color:var(--brand-accent)] inline-block">Моя Коллекция</h2>
+                <div className="h-1 w-32 bg-[color:var(--brand-accent)] mx-auto mt-2 shadow-[0_0_15px_rgba(198,223,85,0.5)]"></div>
             </div>
             {filterControls}
         </>
@@ -141,7 +138,7 @@ const CollectionPage: React.FC<CollectionPageProps> = ({ cards, isModal = false 
       
       {filteredAndSortedCards.length === 0 && !isModal ? (
          <div className="text-center text-gray-400 py-20">
-             <h2 className="text-4xl font-heading text-[color:var(--brand-orange)]">Карты не найдены</h2>
+             <h2 className="text-4xl font-heading text-[color:var(--brand-accent)]">Карты не найдены</h2>
              <p className="mt-2 text-lg">Попробуйте изменить фильтры или откройте новые сундуки!</p>
          </div>
       ) : (

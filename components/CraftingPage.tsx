@@ -26,13 +26,13 @@ const CraftingPage: React.FC<CraftingPageProps> = ({ cards, onCraft }) => {
 
   return (
     <div className="animate-fade-in">
-      <h2 className="text-5xl font-heading mb-8 text-[color:var(--brand-orange)] text-center">Крафт Карт</h2>
+      <h2 className="text-3xl font-heading mb-8 text-[color:var(--brand-accent)] text-center">Крафт Карт</h2>
       {craftableCards.length === 0 ? (
         <p className="text-center text-gray-400 text-lg">У вас нет достаточного количества дубликатов для крафта. Нужно 5 одинаковых карт.</p>
       ) : (
         <div className="space-y-8 max-w-5xl mx-auto">
           {craftableCards.map(({ card, count }) => (
-            <div key={card.id} className="bg-[color:var(--brand-panel)] p-6 rounded-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-gray-700 shadow-lg">
+            <div key={card.id} className="bg-[color:var(--brand-panel)] p-6 flex flex-col md:flex-row items-center justify-between gap-6 border border-[color:var(--brand-accent)]/50">
               <div className="flex items-center gap-4">
                 <CardComponent card={card} count={count} className="w-28 flex-shrink-0" />
                 <div>
@@ -42,12 +42,12 @@ const CraftingPage: React.FC<CraftingPageProps> = ({ cards, onCraft }) => {
               </div>
               <div className="flex items-center gap-4 text-2xl font-bold text-gray-300 font-heading">
                 <span>5 x {card.rarity}</span>
-                <span className="text-[color:var(--brand-teal)] text-3xl">→</span>
+                <span className="text-[color:var(--brand-accent)] text-3xl">→</span>
                 <span>1 x {nextRarity(card.rarity)}</span>
               </div>
               <button
                 onClick={() => onCraft(card.id)}
-                className="w-full md:w-auto bg-[color:var(--brand-orange)] hover:brightness-110 text-gray-900 font-bold py-3 px-8 rounded-lg transition-all duration-200 text-lg transform active:scale-95 shadow-lg shadow-[color:var(--brand-orange)]/20"
+                className="w-full md:w-auto bg-[color:var(--brand-warning)] hover:brightness-110 text-white font-bold py-3 px-8 transition-all duration-200 text-lg transform active:scale-95"
               >
                 Создать
               </button>

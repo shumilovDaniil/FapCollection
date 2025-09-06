@@ -20,8 +20,8 @@ const CheatMenu: React.FC<CheatMenuProps> = ({ onAddCurrency }) => {
         }
     };
     
-    const buttonClass = "w-full bg-teal-500 hover:bg-teal-600 text-white font-bold px-3 py-1 rounded transition text-xs";
-    const inputClass = "w-full bg-gray-800 border border-gray-600 rounded px-2 py-1 text-white text-xs";
+    const buttonClass = "w-full bg-[color:var(--brand-accent)] hover:bg-[color:var(--brand-warning)] text-black font-bold px-3 py-1 transition text-xs";
+    const inputClass = "w-full bg-gray-800 border border-[color:var(--brand-accent)]/50 px-2 py-1 text-white text-xs";
 
 
     return (
@@ -29,7 +29,7 @@ const CheatMenu: React.FC<CheatMenuProps> = ({ onAddCurrency }) => {
              <div className="relative pl-12">
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="absolute top-1/2 -translate-y-1/2 -right-8 bg-gray-800 text-white p-2 rounded-r-lg border border-l-0 border-gray-600"
+                    className="absolute top-1/2 -translate-y-1/2 -right-8 bg-[color:var(--brand-panel)] text-white p-2 border border-l-0 border-[color:var(--brand-accent)]/50"
                     aria-label={isOpen ? "Скрыть чит-меню" : "Показать чит-меню"}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-6 h-6 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
@@ -37,8 +37,8 @@ const CheatMenu: React.FC<CheatMenuProps> = ({ onAddCurrency }) => {
                     </svg>
                 </button>
 
-                <div className="bg-gray-900/80 backdrop-blur-md p-4 rounded-r-xl border border-l-0 border-gray-600 w-64 space-y-4">
-                    <h3 className="text-lg font-bold text-center text-teal-400 font-heading">Чит-Меню</h3>
+                <div className="bg-gray-900/80 backdrop-blur-md p-4 border border-l-0 border-t-2 border-b-2 border-r-2 border-[color:var(--brand-accent)]/50 w-64 space-y-4">
+                    <h3 className="text-lg font-bold text-center text-[color:var(--brand-accent)] font-heading">Чит-Меню</h3>
                     
                     {/* Currency */}
                     <div className="space-y-2">

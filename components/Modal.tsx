@@ -1,5 +1,3 @@
-
-
 import React, { useEffect } from 'react';
 
 interface ModalProps {
@@ -26,13 +24,13 @@ const Modal: React.FC<ModalProps> = ({ onClose, children }) => {
       onClick={onClose}
     >
       <div
-        className="bg-[color:var(--brand-panel)] rounded-2xl shadow-2xl shadow-black/50 w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6 md:p-8 border border-gray-700"
+        className="bg-[color:var(--brand-panel)] w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6 md:p-8 border-2 border-[color:var(--brand-accent)] shadow-[0_0_20px_rgba(198,223,85,0.4)]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative">
           <button
             onClick={onClose}
-            className="absolute -top-4 -right-4 text-gray-300 hover:text-white bg-gray-800 rounded-full w-10 h-10 flex items-center justify-center transition-colors text-2xl font-bold border-2 border-gray-600 hover:border-[color:var(--brand-teal)]"
+            className="absolute -top-4 -right-4 text-[color:var(--brand-accent)] hover:text-white bg-[color:var(--brand-bg)] w-10 h-10 flex items-center justify-center transition-colors text-2xl font-bold border-2 border-[color:var(--brand-accent)] hover:bg-[color:var(--brand-warning)]"
             aria-label="Close modal"
           >
             &times;

@@ -165,10 +165,10 @@ const FixerContractsPage: React.FC<FixerContractsPageProps> = (props) => {
                 <div className="animate-fade-in">
                     <div className="flex justify-between items-center mb-6">
                         <div>
-                            <h2 className="text-4xl font-heading text-[color:var(--brand-orange)]">Выбор Команды для Рейда</h2>
+                            <h2 className="text-4xl font-heading text-[color:var(--brand-accent)]">Выбор Команды для Рейда</h2>
                             <p className="text-gray-400">Выберите до 5 атакующих карт для рейда в районе "{selectedDistrict.name}".</p>
                         </div>
-                         <button onClick={() => setStage('district_selection')} className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition">Назад</button>
+                         <button onClick={() => setStage('district_selection')} className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 transition">Назад</button>
                     </div>
     
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
@@ -180,12 +180,12 @@ const FixerContractsPage: React.FC<FixerContractsPageProps> = (props) => {
                             return (
                                 <div key={card.instanceId} className="relative">
                                     <CardComponent card={card} onClick={() => toggleCardInTeam(card)} className={`${(isSelected || isOnCooldown) ? 'saturate-50' : ''}`} />
-                                    {isSelected && <div className="absolute inset-0 bg-black/70 rounded-3xl flex items-center justify-center pointer-events-none"><div className="text-teal-400 text-6xl font-black">✓</div></div>}
+                                    {isSelected && <div className="absolute inset-0 bg-black/70 flex items-center justify-center pointer-events-none"><div className="text-teal-400 text-6xl font-black">✓</div></div>}
                                     {isOnCooldown && (
-                                        <div className="absolute inset-0 bg-black/80 rounded-3xl flex flex-col items-center justify-center text-center p-2">
+                                        <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center p-2">
                                             <div className="text-lg font-bold text-red-500">Оглушена</div>
                                             <CooldownTimer endTime={cooldownEndTime} />
-                                            <button onClick={() => handleRemoveCooldown(card)} className="mt-2 text-xs bg-red-600 hover:bg-red-500 text-white font-bold py-1 px-2 rounded flex items-center">
+                                            <button onClick={() => handleRemoveCooldown(card)} className="mt-2 text-xs bg-[color:var(--brand-warning)] hover:brightness-110 text-white font-bold py-1 px-2 flex items-center">
                                                 <EddyIcon className="w-3 h-3 mr-1" /> 100
                                             </button>
                                         </div>
@@ -197,7 +197,7 @@ const FixerContractsPage: React.FC<FixerContractsPageProps> = (props) => {
     
                     {selectedTeam.length > 0 && (
                         <div className="text-center mt-8">
-                            <button onClick={() => setStage('in_raid')} className="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-10 rounded-full text-2xl animate-pulse">
+                            <button onClick={() => setStage('in_raid')} className="bg-[color:var(--brand-accent)] hover:bg-[color:var(--brand-warning)] text-black font-bold py-4 px-10 text-2xl animate-pulse">
                                 Начать рейд ({selectedTeam.length} карт)
                             </button>
                         </div>
@@ -210,7 +210,7 @@ const FixerContractsPage: React.FC<FixerContractsPageProps> = (props) => {
         return (
             <div className="animate-fade-in">
                 <div className="text-center mb-10">
-                    <h2 className="text-5xl font-heading text-[color:var(--brand-orange)]">Контракты Фиксера</h2>
+                    <h2 className="text-3xl font-heading text-[color:var(--brand-accent)]">Контракты Фиксера</h2>
                     <p className="text-lg text-gray-400 mt-2">Выберите район для начала рейда и заработка Эдди.</p>
                 </div>
     
@@ -221,7 +221,7 @@ const FixerContractsPage: React.FC<FixerContractsPageProps> = (props) => {
                         const requiredDistrictName = FIXER_DISTRICTS.find(d => d.id === district.unlockRequirement?.districtId)?.name;
                         
                         return (
-                            <div key={district.id} className={`bg-gray-900 border border-gray-700 rounded-2xl overflow-hidden shadow-2xl shadow-black/40 transition-all duration-300 ${isUnlocked ? 'hover:border-[color:var(--brand-teal)] hover:scale-105' : 'opacity-60 saturate-50'}`}>
+                            <div key={district.id} className={`bg-gray-900 border-2 border-gray-700 overflow-hidden transition-all duration-300 ${isUnlocked ? 'hover:border-[color:var(--brand-accent)] hover:scale-105' : 'opacity-60 saturate-50'}`}>
                                 <div className="relative h-48">
                                     <img src={district.imageUrl} alt={district.name} className="w-full h-full object-cover"/>
                                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent"></div>
@@ -231,15 +231,15 @@ const FixerContractsPage: React.FC<FixerContractsPageProps> = (props) => {
                                     <p className="text-gray-300 mb-4 flex-grow">{district.description}</p>
                                     
                                     <div className="text-sm space-y-2 mb-6">
-                                        <div className="flex justify-between items-center bg-black/20 p-2 rounded-md">
+                                        <div className="flex justify-between items-center bg-black/20 p-2">
                                             <span className="font-bold text-gray-400">Здоровье врагов:</span>
                                             <span className="font-mono text-white">{district.hpRange[0]} - {district.hpRange[1]}</span>
                                         </div>
-                                        <div className="flex justify-between items-center bg-black/20 p-2 rounded-md">
+                                        <div className="flex justify-between items-center bg-black/20 p-2">
                                             <span className="font-bold text-gray-400">Награда (Эдди):</span>
-                                            <span className="font-mono text-[color:var(--brand-orange)]">{district.rewardRange[0]} - {district.rewardRange[1]}</span>
+                                            <span className="font-mono text-[color:var(--brand-accent)]">{district.rewardRange[0]} - {district.rewardRange[1]}</span>
                                         </div>
-                                        <div className="flex justify-between items-center bg-black/20 p-2 rounded-md">
+                                        <div className="flex justify-between items-center bg-black/20 p-2">
                                             <span className="font-bold text-gray-400">Шанс оглушения:</span>
                                             <span className="font-mono text-yellow-400">{(district.stunChance * 100).toFixed(0)}%</span>
                                         </div>
@@ -248,12 +248,12 @@ const FixerContractsPage: React.FC<FixerContractsPageProps> = (props) => {
                                     {isUnlocked ? (
                                          <button
                                             onClick={() => handleSelectDistrict(district)}
-                                            className="w-full mt-auto bg-[color:var(--brand-orange)] hover:brightness-110 text-gray-900 font-bold py-3 px-4 rounded-lg transition-all duration-200 text-lg transform active:scale-95 shadow-lg shadow-[color:var(--brand-orange)]/20"
+                                            className="w-full mt-auto bg-[color:var(--brand-warning)] hover:brightness-110 text-white font-bold py-3 px-4 transition-all duration-200 text-lg transform active:scale-95"
                                         >
                                             Выбрать Контракт
                                         </button>
                                     ) : (
-                                        <div className="w-full mt-auto bg-gray-800 text-gray-400 font-bold py-3 px-4 rounded-lg text-center border-2 border-dashed border-gray-600">
+                                        <div className="w-full mt-auto bg-gray-800 text-gray-400 font-bold py-3 px-4 text-center border-2 border-dashed border-gray-600">
                                             <div className="flex items-center justify-center mb-1">
                                                 <LockIcon />
                                                 <span className="ml-2">ЗАБЛОКИРОВАНО</span>
@@ -279,32 +279,32 @@ const FixerContractsPage: React.FC<FixerContractsPageProps> = (props) => {
             
             {raidSummary && (
                 <Modal onClose={handleCloseRaidSummary}>
-                    <h2 className="text-4xl font-heading text-center mb-6 text-[color:var(--brand-orange)]">Итоги Рейда</h2>
+                    <h2 className="text-4xl font-heading text-center mb-6 text-[color:var(--brand-accent)]">Итоги Рейда</h2>
                     <div className="space-y-4 text-center">
-                        <div className="bg-gray-800 p-4 rounded-lg">
+                        <div className="bg-gray-800 p-4">
                             <p className="text-lg text-gray-400">Всего Уничтожено Врагов</p>
                             <p className="text-4xl font-bold text-white">{raidSummary.kills}</p>
                         </div>
-                        <div className="bg-gray-800 p-4 rounded-lg">
+                        <div className="bg-gray-800 p-4">
                              <p className="text-lg text-gray-400">Всего Заработано Эдди</p>
-                            <div className="flex items-center justify-center text-4xl font-bold text-[color:var(--brand-orange)]">
+                            <div className="flex items-center justify-center text-4xl font-bold text-[color:var(--brand-accent)]">
                                 <EddyIcon className="w-8 h-8 mr-2"/>
                                 {raidSummary.earnings.toLocaleString()}
                             </div>
                         </div>
 
-                        <div className="bg-gray-800 p-4 rounded-lg">
+                        <div className="bg-gray-800 p-4">
                             <h3 className="text-2xl font-bold mb-4 text-gray-300">Статистика Команды</h3>
                             <div className="space-y-2 text-left">
                                 {selectedTeam.map(card => (
-                                    <div key={card.instanceId} className="flex justify-between items-center bg-gray-700 p-2 rounded">
+                                    <div key={card.instanceId} className="flex justify-between items-center bg-gray-700 p-2">
                                         <span className="font-semibold">{card.name}</span>
                                         <span className="font-bold">{raidSummary.killStats[card.instanceId] || 0} убийств</span>
                                     </div>
                                 ))}
                             </div>
                         </div>
-                         <button onClick={handleCloseRaidSummary} className="mt-4 w-full bg-[color:var(--brand-orange)] hover:brightness-110 text-gray-900 font-bold py-3 px-4 rounded-lg transition-all duration-200 text-lg">
+                         <button onClick={handleCloseRaidSummary} className="mt-4 w-full bg-[color:var(--brand-warning)] hover:brightness-110 text-white font-bold py-3 px-4 transition-all duration-200 text-lg">
                             Вернуться к контрактам
                         </button>
                     </div>

@@ -28,12 +28,11 @@ const Tooltip: React.FC<TooltipProps> = ({ children, content }) => {
   
   const tooltipElement = isVisible ? (
     <div
-      className="fixed z-[100] bg-gray-900 text-white text-sm px-3 py-1.5 rounded-md shadow-lg border border-gray-600 pointer-events-none animate-fade-in transition-transform duration-100"
+      className="fixed z-[100] w-fit bg-[color:var(--brand-bg)] text-white text-sm px-3 py-1.5 pointer-events-none animate-fade-in transition-transform duration-100 border border-[color:var(--brand-accent)]"
       style={{
         left: position.x + 15, // Offset from cursor
         top: position.y + 15,
         transform: `translate(-50%, 0)`, // Center the tooltip a bit
-        whiteSpace: 'nowrap',
         maxWidth: '250px',
       }}
     >

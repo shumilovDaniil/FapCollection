@@ -216,14 +216,13 @@ const App: React.FC = () => {
             case Page.Shop:
                 return <ShopPage currencies={playerCurrencies} setCurrencies={setPlayerCurrencies} />;
             case Page.Marketplace:
-                // FIX: Pass setPlayerCurrencies to the setCurrencies prop.
                 return <MarketplacePage playerCards={playerCards} setPlayerCards={setPlayerCards} currencies={playerCurrencies} setCurrencies={setPlayerCurrencies} />;
             case Page.Developer:
                 return <DeveloperPage 
                             allCards={allGameCards} 
                             onImageUpload={handleImageUpdate} 
                             onSaveCard={handleGameCardUpdate} 
-                            onDeleteCard={handleDeleteGameCard} // Pass the new delete function
+                            onDeleteCard={handleDeleteGameCard}
                         />;
             default:
                 return <CollectionPage cards={playerCards} />;
@@ -234,7 +233,7 @@ const App: React.FC = () => {
         return (
             <div className="min-h-screen bg-[color:var(--brand-bg)] flex flex-col items-center justify-center text-gray-300">
                 <img src="./logo.png" alt="XCollection Logo" className="h-32 mb-4 animate-pulse" />
-                <h1 className="text-5xl font-heading text-shadow-lg text-[color:var(--brand-orange)]">XCollection</h1>
+                <h1 className="text-3xl font-heading text-shadow-lg text-[color:var(--brand-accent)]">XCollection</h1>
                 <p className="text-lg mt-2 font-semibold">Загрузка данных...</p>
             </div>
         )
@@ -259,7 +258,7 @@ const App: React.FC = () => {
                 </main>
                 {modalContent && (
                     <Modal onClose={() => setModalContent(null)}>
-                        <h2 className="text-4xl font-heading text-center mb-6 text-[color:var(--brand-orange)]">Новые Карты!</h2>
+                        <h2 className="text-4xl font-heading text-center mb-6 text-[color:var(--brand-accent)]">Новые Карты!</h2>
                         {modalContent}
                     </Modal>
                 )}

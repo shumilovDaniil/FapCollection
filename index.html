@@ -8,48 +8,42 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
       :root {
-        --brand-bg: #111827; /* Darker gray */
-        --brand-panel: #1f2937; /* Lighter gray for panels */
-        --brand-orange: #f97316;
-        --brand-teal: #14b8a6;
-        --brand-cream: #f3f4f6; /* Light gray for text */
+        --brand-bg: #151218;
+        --brand-panel: #211d25; /* Slightly lighter than bg */
+        --brand-accent: #c6df55;
+        --brand-warning: #b33e34;
+        --brand-text: #e0e0e0;
       }
       body {
         background-color: var(--brand-bg);
-        color: var(--brand-cream);
-        font-family: 'Inter', sans-serif;
-        font-weight: 400;
-        letter-spacing: normal;
-        text-transform: none;
+        color: var(--brand-text);
+        font-family: 'Rajdhani', sans-serif;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        /* Cyberpunk grid background */
+        background-image: 
+          linear-gradient(rgba(198, 223, 85, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(198, 223, 85, 0.05) 1px, transparent 1px);
+        background-size: 2rem 2rem;
       }
       .font-heading {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Orbitron', sans-serif;
         font-weight: 900;
-        text-shadow: 0px 2px 4px rgba(0,0,0,0.5);
+        text-shadow: 0 0 5px var(--brand-accent), 0 0 10px var(--brand-accent);
       }
-       /* Custom scrollbar for a more integrated feel */
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: var(--brand-bg);
-      }
-      ::-webkit-scrollbar-thumb {
-        background-color: #374151;
-        border-radius: 10px;
-        border: 2px solid var(--brand-bg);
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background-color: var(--brand-teal);
-      }
-       /* Custom placeholder style */
+       /* Remove custom scrollbar styling to use default sharp one */
+
+      /* Custom placeholder style */
       ::placeholder {
-        color: #9ca3af;
+        color: #7a7a7a;
         opacity: 0.8;
+        text-transform: uppercase;
       }
+      
       /* VFX Animations */
       @keyframes damage-number { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-100px) scale(1.5); opacity: 0; } }
       .animate-damage-number { animation: damage-number 1s forwards; }
@@ -62,6 +56,7 @@
       
       @keyframes click-burst { 0% { transform: scale(0); opacity: 0.8; } 100% { transform: scale(1.5); opacity: 0; } }
       .animate-click-burst { animation: click-burst 0.3s ease-out forwards; }
+      .text-shadow-none { text-shadow: none; }
     </style>
   <script type="importmap">
 {

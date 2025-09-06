@@ -17,9 +17,9 @@ interface ClickBurst {
 }
 
 const RaidHealthBar: React.FC<{ current: number; max: number; }> = ({ current, max }) => (
-    <div className="w-full bg-gray-700 rounded-full h-8 border-2 border-gray-900 shadow-inner relative my-4">
+    <div className="w-full bg-gray-900 h-8 border-2 border-[color:var(--brand-accent)]/50 relative my-4">
       <div
-        className="bg-gradient-to-r from-red-500 to-red-700 h-full rounded-full transition-all duration-200"
+        className="bg-[color:var(--brand-warning)] h-full transition-all duration-200"
         style={{ width: `${Math.max(0, (current / max) * 100)}%` }}
       />
       <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-lg drop-shadow-md">
@@ -208,39 +208,39 @@ const RaidInterface: React.FC<RaidInterfaceProps> = ({ district, team, allGameCa
     return (
         <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)] animate-fade-in relative overflow-hidden">
              {damageNumbers.map(dn => (
-                <div key={dn.id} className="absolute text-3xl font-black text-orange-400 pointer-events-none animate-damage-number" style={{ left: dn.x, top: dn.y, zIndex: 101 }}>-{dn.amount}</div>
+                <div key={dn.id} className="absolute text-3xl font-black text-[color:var(--brand-accent)] pointer-events-none animate-damage-number" style={{ left: dn.x, top: dn.y, zIndex: 101 }}>-{dn.amount}</div>
             ))}
              {clickBursts.map(burst => (
-                <div key={burst.id} className="absolute w-20 h-20 bg-orange-400/50 rounded-full pointer-events-none animate-click-burst" style={{ left: burst.x, top: burst.y, transform: 'translate(-50%, -50%)', zIndex: 102 }}></div>
+                <div key={burst.id} className="absolute w-20 h-20 bg-[color:var(--brand-accent)]/50 rounded-full pointer-events-none animate-click-burst" style={{ left: burst.x, top: burst.y, transform: 'translate(-50%, -50%)', zIndex: 102 }}></div>
             ))}
             
             {/* Top Right Info */}
-            <div className="absolute top-0 right-0 bg-black/50 p-4 rounded-bl-xl text-lg text-center">
+            <div className="absolute top-0 right-0 bg-black/50 p-4 text-lg text-center border-b-2 border-l-2 border-[color:var(--brand-accent)]/50">
                 <div className="font-bold text-gray-300">Добыча в Рейде:</div>
-                <div className="flex items-center justify-center font-bold text-2xl text-[color:var(--brand-orange)]"><EddyIcon className="w-6 h-6 mr-2"/> {raidEarnings.toLocaleString()}</div>
+                <div className="flex items-center justify-center font-bold text-2xl text-[color:var(--brand-accent)]"><EddyIcon className="w-6 h-6 mr-2"/> {raidEarnings.toLocaleString()}</div>
                 <div className="font-bold text-gray-300 mt-2">Уничтожено:</div>
                 <div className="font-bold text-2xl text-white">{raidKills}</div>
             </div>
 
             {/* Top Left Team Status */}
-            <div className="absolute top-0 left-0 bg-black/50 p-4 rounded-br-xl w-96">
+            <div className="absolute top-0 left-0 bg-black/50 p-4 w-96 border-b-2 border-r-2 border-[color:var(--brand-accent)]/50">
                 <h3 className="font-bold text-center text-gray-300 mb-2">Ваша Команда</h3>
                 <div className="flex space-x-2">
                     {team.map((card) => {
                         const isStunned = stunnedTeam.some(c => c.instanceId === card.instanceId);
                         const isActiveAttacker = !isStunned && activeTeam.findIndex(c => c.instanceId === card.instanceId) === attackerIndex;
                         return (
-                            <div key={card.instanceId} className={`w-16 transition-all duration-300 ${isStunned ? 'opacity-20 saturate-0' : ''} ${isActiveAttacker ? 'ring-2 ring-orange-500 scale-110' : ''} rounded-lg`}>
-                                <img src={card.imageUrl} className="w-full rounded-lg" alt={card.name}/>
+                            <div key={card.instanceId} className={`w-16 transition-all duration-300 ${isStunned ? 'opacity-20 saturate-0' : ''} ${isActiveAttacker ? 'ring-2 ring-[color:var(--brand-accent)] scale-110' : ''}`}>
+                                <img src={card.imageUrl} className="w-full" alt={card.name}/>
                             </div>
                         )
                     })}
                 </div>
                  {currentAttacker && (
-                    <div className="mt-2 text-center bg-black/30 p-2 rounded-md">
+                    <div className="mt-2 text-center bg-black/30 p-2">
                         <p className="text-xs text-gray-400">СЕЙЧАС АТАКУЕТ</p>
                         <p className="font-bold text-white truncate">{currentAttacker.name}</p>
-                        <div className="flex items-center justify-center text-orange-400 font-bold">
+                        <div className="flex items-center justify-center text-[color:var(--brand-accent)] font-bold">
                             <StrengthIcon className="w-4 h-4 mr-1"/>
                             {currentAttacker.stats.strength}
                         </div>
@@ -249,9 +249,9 @@ const RaidInterface: React.FC<RaidInterfaceProps> = ({ district, team, allGameCa
             </div>
             
             {/* Bottom Left Battle Log */}
-            <div className="absolute bottom-4 left-4 bg-black/50 p-2 rounded-lg w-72 h-36">
+            <div className="absolute bottom-4 left-4 bg-black/50 p-2 w-72 h-36 border-2 border-[color:var(--brand-accent)]/50">
                 <div className="h-full text-xs overflow-auto font-mono flex flex-col-reverse text-left">
-                    {battleLog.map((msg, i) => <p key={i} className={`p-1 rounded ${i === 0 ? 'text-yellow-300 bg-white/5' : 'text-gray-400'}`}>{msg}</p>)}
+                    {battleLog.map((msg, i) => <p key={i} className={`p-1 ${i === 0 ? 'text-[color:var(--brand-accent)] bg-white/5' : 'text-gray-400'}`}>{msg}</p>)}
                 </div>
             </div>
 
@@ -268,7 +268,7 @@ const RaidInterface: React.FC<RaidInterfaceProps> = ({ district, team, allGameCa
                 <CardComponent card={currentEnemy} />
             </div>
 
-            <button onClick={() => onEndRaid(district.id, raidKills, raidEarnings, stunnedTeam.map(c => c.instanceId), killStats)} className="mt-8 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg transition-colors text-xl transform active:scale-95 shadow-lg shadow-red-600/20">
+            <button onClick={() => onEndRaid(district.id, raidKills, raidEarnings, stunnedTeam.map(c => c.instanceId), killStats)} className="mt-8 bg-[color:var(--brand-warning)] hover:brightness-110 text-white font-bold py-3 px-8 text-xl transform active:scale-95">
                 Завершить Рейд
             </button>
         </div>

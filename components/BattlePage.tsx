@@ -20,9 +20,9 @@ type BattleStatus = 'idle' | 'deck_selection' | 'in_progress' | 'victory' | 'def
 const HealthBar: React.FC<{ current: number; max: number; label: string }> = ({ current, max, label }) => (
   <div className="w-full">
     <span className="text-lg font-bold text-white">{label}</span>
-    <div className="w-full bg-gray-700 rounded-full h-6 border-2 border-gray-900 shadow-inner relative">
+    <div className="w-full bg-gray-900 h-6 border-2 border-[color:var(--brand-accent)]/50 relative">
       <div
-        className="bg-gradient-to-r from-red-500 to-red-700 h-full rounded-full transition-all duration-500"
+        className="bg-[color:var(--brand-warning)] h-full transition-all duration-500"
         style={{ width: `${Math.max(0, (current / max) * 100)}%` }}
       />
       <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-sm drop-shadow-md">
@@ -44,7 +44,6 @@ const BattlePage: React.FC<BattlePageProps> = ({ playerCards, allGameCards, play
   const [battleLog, setBattleLog] = useState<string[]>([]);
   const [reward, setReward] = useState(0);
   
-  // New states for special effects
   const [attackEnhancement, setAttackEnhancement] = useState(0);
   const [isSecondHeartActive, setIsSecondHeartActive] = useState(false);
 
@@ -255,11 +254,11 @@ const BattlePage: React.FC<BattlePageProps> = ({ playerCards, allGameCards, play
   if (status === 'idle') {
     return (
       <div className="text-center animate-fade-in">
-        <h2 className="text-5xl font-heading text-[color:var(--brand-orange)]">Боевая Арена</h2>
+        <h2 className="text-3xl font-heading text-[color:var(--brand-accent)]">Боевая Арена</h2>
         <p className="text-xl text-gray-300 my-6">Соберите колоду из 5 карт и сразитесь за славу и Эдди!</p>
         <button
           onClick={() => setStatus('deck_selection')}
-          className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-10 rounded-full text-2xl transition-transform transform hover:scale-105"
+          className="bg-[color:var(--brand-warning)] hover:brightness-110 text-white font-bold py-4 px-10 text-2xl transition-transform transform hover:scale-105"
         >
           Начать Бой
         </button>
@@ -270,14 +269,14 @@ const BattlePage: React.FC<BattlePageProps> = ({ playerCards, allGameCards, play
   if (status === 'deck_selection') {
     return (
       <div className="animate-fade-in">
-        <h2 className="text-4xl font-heading text-[color:var(--brand-orange)] text-center mb-4">Выберите свою колоду ({selectedDeck.length}/{DECK_SIZE})</h2>
+        <h2 className="text-4xl font-heading text-[color:var(--brand-accent)] text-center mb-4">Выберите свою колоду ({selectedDeck.length}/{DECK_SIZE})</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
           {uniquePlayerCards.map(card => {
             const isSelected = selectedDeck.some(c => c.instanceId === card.instanceId);
             return (
-              <div key={card.instanceId} className={`relative rounded-3xl transition-all duration-300 ${isSelected ? 'scale-95 opacity-50' : ''}`}>
+              <div key={card.instanceId} className={`relative transition-all duration-300 ${isSelected ? 'scale-95 opacity-50' : ''}`}>
                 <CardComponent card={card} onClick={() => toggleCardInDeck(card)} />
-                {isSelected && <div className="absolute inset-0 bg-black/70 rounded-3xl flex items-center justify-center"><div className="text-orange-500 text-6xl font-black">✓</div></div>}
+                {isSelected && <div className="absolute inset-0 bg-black/70 flex items-center justify-center"><div className="text-[color:var(--brand-accent)] text-6xl font-black">✓</div></div>}
               </div>
             );
           })}
@@ -286,7 +285,7 @@ const BattlePage: React.FC<BattlePageProps> = ({ playerCards, allGameCards, play
           <div className="text-center mt-8">
             <button
               onClick={startBattle}
-              className="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-10 rounded-full text-2xl animate-pulse"
+              className="bg-[color:var(--brand-accent)] hover:bg-[color:var(--brand-warning)] text-black font-bold py-4 px-10 text-2xl animate-pulse"
             >
               В Бой!
             </button>
@@ -302,11 +301,11 @@ const BattlePage: React.FC<BattlePageProps> = ({ playerCards, allGameCards, play
     switch(status) {
         case 'victory':
             message = 'Победа!';
-            messageClass = 'text-green-400';
+            messageClass = 'text-[color:var(--brand-accent)]';
             break;
         case 'defeat':
             message = 'Поражение';
-            messageClass = 'text-red-500';
+            messageClass = 'text-[color:var(--brand-warning)]';
             break;
         case 'draw':
             message = 'Ничья';
@@ -320,7 +319,7 @@ const BattlePage: React.FC<BattlePageProps> = ({ playerCards, allGameCards, play
                 {message}
             </h2>
             {status === 'victory' && (
-                <div className="flex items-center text-2xl text-yellow-400 mb-6 bg-black/30 p-4 rounded-xl">
+                <div className="flex items-center text-2xl text-[color:var(--brand-accent)] mb-6 bg-black/30 p-4">
                     <EddyIcon className="w-8 h-8 mr-2"/>
                     <span>Вы получили {reward} Эдди!</span>
                 </div>
@@ -330,7 +329,7 @@ const BattlePage: React.FC<BattlePageProps> = ({ playerCards, allGameCards, play
             )}
             <button
                 onClick={resetGame}
-                className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-full text-xl transition-transform transform hover:scale-105"
+                className="bg-[color:var(--brand-warning)] hover:brightness-110 text-white font-bold py-3 px-8 text-xl transition-transform transform hover:scale-105"
             >
                 Сыграть снова
             </button>
@@ -345,15 +344,15 @@ const BattlePage: React.FC<BattlePageProps> = ({ playerCards, allGameCards, play
             <HealthBar current={opponentHp} max={OPPONENT_MAX_HP} label="Противник" />
             <div className="flex justify-center space-x-[-50px] mt-4 h-48">
                 {opponentHand.map((card, i) => (
-                    <div key={card.id + '-' + i} className="w-28 aspect-[2/3] bg-gray-800 rounded-xl border-2 border-purple-500 transform rotate-[-3deg] shadow-lg"></div>
+                    <div key={card.id + '-' + i} className="w-28 aspect-[2/3] bg-gray-800 border-2 border-[color:var(--brand-warning)] transform rotate-[-3deg] shadow-lg"></div>
                 ))}
             </div>
         </div>
 
         {/* Center Log */}
         <div className="h-24 p-2">
-            <div className="bg-black/30 h-full rounded-lg p-2 text-center text-sm overflow-auto font-mono flex flex-col-reverse">
-                {battleLog.map((msg, i) => <p key={i} className={i === 0 ? 'text-yellow-300' : 'text-gray-400'}>{msg}</p>)}
+            <div className="bg-black/30 h-full p-2 text-center text-sm overflow-auto font-mono flex flex-col-reverse border border-[color:var(--brand-accent)]/30">
+                {battleLog.map((msg, i) => <p key={i} className={i === 0 ? 'text-[color:var(--brand-accent)]' : 'text-gray-400'}>{msg}</p>)}
             </div>
         </div>
 
