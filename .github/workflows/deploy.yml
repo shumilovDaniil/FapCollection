@@ -1,0 +1,43 @@
+name: Deploy to GitHub Pages (Vite)
+
+on:
+  push:
+    branches: [ main ]    # деплой при каждом пуше в main
+  workflow_dispatch:       # и вручную по кнопке
+
+permissions:
+  contents: write          # нужно для пуша в gh-pages
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build
+        run: |
+          npm run build
+          # 404 для перезагрузок внутренних роутов на GitHub Pages
+          if [ -f dist/index.html ]; then cp dist/index.html dist/404.html; fi
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: dist
+          publish_branch: gh-pages
