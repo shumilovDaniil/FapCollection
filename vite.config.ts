@@ -7,9 +7,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, ".", ""); // читает .env, .env.production и т.п.
 
   return {
-    // ВАЖНО: укажи точное имя репозитория с учётом регистра
-    // например: base: "/FapCollection/"
-    base: "/repo-name/",
+    base: "/xcollection/",
 
     plugins: [react()],
 
