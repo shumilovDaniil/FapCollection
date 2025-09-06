@@ -1,6 +1,6 @@
 // vite.config.ts (или .js)
 import path from "path";
-import react from "@vitejs/plugin-react";
+import react from "@vitejs/plugin-react-swc";
 import { defineConfig, loadEnv } from "vite";
 
 export default defineConfig(({ mode }) => {
